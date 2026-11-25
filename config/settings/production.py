@@ -9,6 +9,10 @@ IS_VERCEL = bool(os.environ.get("VERCEL"))
 if IS_VERCEL:
     if ".vercel.app" not in ALLOWED_HOSTS:  # noqa: F405
         ALLOWED_HOSTS = [*ALLOWED_HOSTS, ".vercel.app"]  # noqa: F405
+    WHITENOISE_USE_FINDERS = True
+    STORAGES["staticfiles"] = {  # noqa: F405
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    }
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 USE_X_FORWARDED_HOST = True
