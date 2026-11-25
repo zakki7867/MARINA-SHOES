@@ -20,7 +20,7 @@ _env_file = BASE_DIR / ".env"
 if _env_file.exists():
     environ.Env.read_env(_env_file)
 
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("SECRET_KEY", default="change-me-set-real-SECRET_KEY-in-environment")
 DEBUG = env("DEBUG")
 ALLOWED_HOSTS = env("ALLOWED_HOSTS")
 
