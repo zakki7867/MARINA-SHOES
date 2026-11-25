@@ -1,0 +1,22 @@
+{% load i18n %}
+{% get_current_language as CURRENT_LANG %}
+<form method="post" action="{% url 'set_language' %}" class="inline-flex items-center {% if variant == 'light' %}bg-slate-100 border border-slate-200{% else %}bg-slate-800 border border-slate-700{% endif %} rounded-lg p-0.5 text-xs font-semibold">
+  {% csrf_token %}
+  <input type="hidden" name="next" value="{{ request.get_full_path }}" />
+  <button
+    type="submit"
+    name="language"
+    value="en"
+    class="px-2.5 py-1 rounded-md transition {% if CURRENT_LANG == 'en' %}bg-sky-600 text-white shadow-sm{% else %}{% if variant == 'light' %}text-slate-600 hover:text-slate-900{% else %}text-slate-300 hover:text-white{% endif %}{% endif %}"
+  >
+    English
+  </button>
+  <button
+    type="submit"
+    name="language"
+    value="ar"
+    class="px-2.5 py-1 rounded-md transition {% if CURRENT_LANG == 'ar' %}bg-sky-600 text-white shadow-sm{% else %}{% if variant == 'light' %}text-slate-600 hover:text-slate-900{% else %}text-slate-300 hover:text-white{% endif %}{% endif %}"
+  >
+    العربية
+  </button>
+</form>

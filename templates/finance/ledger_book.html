@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ title }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-5 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ title }}</h1>
+    <p class="text-sm text-slate-500">{% trans "In:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ book.total_in }} &middot; {% trans "Out:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ book.total_out }} &middot; {% trans "Closing Balance:" %} <span class="font-bold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ book.closing_balance }}</span></p>
+  </div>
+  <a href="{% url 'finance:overview' %}" class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold">{% trans "Back to Overview" %}</a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr><th class="px-4 py-3">{% trans "Date" %}</th><th class="px-4 py-3">{% trans "Ref" %}</th><th class="px-4 py-3">{% trans "Particulars" %}</th><th class="px-4 py-3">{% trans "Mode" %}</th><th class="px-4 py-3 text-right">{% trans "In (Credit)" %}</th><th class="px-4 py-3 text-right">{% trans "Out (Debit)" %}</th><th class="px-4 py-3 text-right">{% trans "Balance" %}</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for e in book.entries %}
+      <tr>
+        <td class="px-4 py-3 whitespace-nowrap">{{ e.date }}</td>
+        <td class="px-4 py-3 font-mono text-xs">{{ e.ref }}</td>
+        <td class="px-4 py-3">{{ e.particulars }}</td>
+        <td class="px-4 py-3">{{ e.mode }}</td>
+        <td class="px-4 py-3 text-right text-emerald-700">{% if e.credit > 0 %}{{ e.credit }}{% else %}—{% endif %}</td>
+        <td class="px-4 py-3 text-right text-rose-700">{% if e.debit > 0 %}{{ e.debit }}{% else %}—{% endif %}</td>
+        <td class="px-4 py-3 text-right font-bold">{{ e.balance }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">{% trans "No transactions in this book yet." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

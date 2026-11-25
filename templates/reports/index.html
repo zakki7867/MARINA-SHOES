@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Reports & Exports" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Reports & Exports" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "View live business reports or download as CSV / Excel (.xlsx)" %}</p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    {% for grp in report_groups %}
+    <a href="#{{ grp.anchor }}" class="px-3 py-1.5 bg-white border border-slate-200 hover:border-sky-500 hover:text-sky-700 rounded-lg text-xs font-semibold text-slate-700">{{ grp.heading }}</a>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="space-y-8">
+  {% for grp in report_groups %}
+  <section id="{{ grp.anchor }}" class="scroll-mt-6">
+    <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-4">
+      <h2 class="text-lg font-bold text-slate-800">{{ grp.heading }}</h2>
+      <span class="text-xs font-medium text-slate-400">{{ grp.items|length }} {% trans "reports" %}</span>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {% for r in grp.items %}
+      <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm flex flex-col justify-between">
+        <div>
+          <h3 class="font-bold text-slate-900 text-base">{{ r.title }}</h3>
+          <p class="text-sm text-slate-500 mt-1">{{ r.desc }}</p>
+        </div>
+        <div class="mt-4 pt-3 border-t border-slate-100 flex flex-wrap gap-2">
+          <a href="{% url 'reports:detail' r.key %}" class="px-3 py-1.5 bg-slate-900 text-white rounded-lg text-xs font-semibold">{% trans "View" %}</a>
+          <a href="{% url 'reports:detail' r.key %}?export=csv" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-xs font-semibold">CSV</a>
+          <a href="{% url 'reports:detail' r.key %}?export=xlsx" class="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-200 rounded-lg text-xs font-semibold">{% trans "Excel (.xlsx)" %}</a>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </section>
+  {% endfor %}
+</div>
+{% endblock %}

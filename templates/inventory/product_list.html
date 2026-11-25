@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Products & Inventory" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Products & Inventory" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Shoe styles, size/color variants, and real-time computed stock" %}</p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <a href="{% url 'inventory:low_stock' %}" class="px-3.5 py-2 rounded-lg bg-amber-50 border border-amber-200 text-amber-800 text-sm font-semibold">
+      {% trans "Low Stock" %} ({{ low_stock_count }})
+    </a>
+    {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+    <a href="{% url 'inventory:stock_movement' %}" class="px-3.5 py-2 rounded-lg bg-slate-800 text-white text-sm font-semibold hover:bg-slate-700">
+      {% trans "Stock Adjustment" %}
+    </a>
+    <a href="{% url 'inventory:product_create' %}" class="px-4 py-2 rounded-lg bg-sky-600 text-white text-sm font-semibold hover:bg-sky-700">
+      {% trans "+ New Product" %}
+    </a>
+    {% endif %}
+  </div>
+</div>
+
+<form method="get" hx-get="{% url 'inventory:product_list' %}" hx-target="#product-table-container" hx-trigger="keyup changed delay:300ms from:#search-input, change from:select" class="bg-white rounded-xl border border-slate-200 p-4 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
+  <input id="search-input" type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search name, SKU, barcode, item code...' %}" class="sm:col-span-2" />
+  <select name="category">
+    <option value="">{% trans "All Categories" %}</option>
+    {% for c in categories %}
+    <option value="{{ c.id }}" {% if request.GET.category == c.id|stringformat:"s" %}selected{% endif %}>{{ c.name }}</option>
+    {% endfor %}
+  </select>
+  <select name="brand">
+    <option value="">{% trans "All Brands" %}</option>
+    {% for b in brands %}
+    <option value="{{ b.id }}" {% if request.GET.brand == b.id|stringformat:"s" %}selected{% endif %}>{{ b.name }}</option>
+    {% endfor %}
+  </select>
+</form>
+
+<div id="product-table-container">
+  {% include "inventory/partials/product_table.html" %}
+</div>
+{% endblock %}

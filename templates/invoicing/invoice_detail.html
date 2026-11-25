@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ invoice }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ invoice }}</h1>
+    <p class="text-sm text-slate-500">
+      {% trans "Customer:" %} <a href="{% url 'customers:customer_detail' invoice.customer_id %}" class="text-sky-700 hover:underline">{{ invoice.customer.name }}</a>
+      &middot; {% trans "Date:" %} {{ invoice.invoice_date }} &middot; {% trans "Due:" %} {{ invoice.due_date }}
+      &middot; {% trans "Region:" %} {{ invoice.place_of_supply_state }}
+      &middot; {% trans "Status:" %} <span class="font-semibold">{{ invoice.get_status_display }}</span>
+    </p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <a href="{% url 'invoicing:invoice_print' invoice.pk %}" target="_blank" class="px-3.5 py-2 bg-slate-800 text-white rounded-lg text-sm font-semibold">{% trans "Print View" %}</a>
+    <a href="{% url 'invoicing:invoice_pdf' invoice.pk %}" class="px-3.5 py-2 bg-indigo-600 text-white rounded-lg text-sm font-semibold">{% trans "Download PDF" %}</a>
+    {% if invoice.status != 'DRAFT' and invoice.status != 'CANCELLED' %}
+    <a href="{{ whatsapp_url }}" target="_blank" rel="noopener" class="px-3.5 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold">{% trans "WhatsApp Share" %}</a>
+    {% if invoice.balance_due > 0 %}
+    <a href="{% url 'payments:payment_list' %}?customer={{ invoice.customer_id }}&invoice={{ invoice.pk }}" class="px-3.5 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold">{% trans "Receive Payment" %}</a>
+    {% if customer_unallocated_advance > 0 %}
+    <form method="post" action="{% url 'invoicing:invoice_apply_advance' invoice.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="px-3.5 py-2 bg-teal-600 text-white rounded-lg text-sm font-semibold">{% trans "Apply Advance" %} ({{ store_settings.currency_symbol|default:"KD" }} {{ customer_unallocated_advance }})</button>
+    </form>
+    {% endif %}
+    {% endif %}
+    <a href="{% url 'sales:return_create' invoice.pk %}" class="px-3.5 py-2 bg-amber-50 text-amber-800 border border-amber-200 rounded-lg text-sm font-semibold">{% trans "Sales Return / Credit Note" %}</a>
+    <a href="{% url 'sales:exchange_create' invoice.pk %}" class="px-3.5 py-2 bg-purple-50 text-purple-800 border border-purple-200 rounded-lg text-sm font-semibold">{% trans "Exchange" %}</a>
+    {% endif %}
+    {% if invoice.status == 'DRAFT' %}
+    <form method="post" action="{% url 'invoicing:invoice_issue' invoice.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="px-3.5 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold">{% trans "Issue Invoice" %}</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto mb-6">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3">{% trans "Item" %}</th>
+        <th class="px-4 py-3">{% trans "Code" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Qty" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Rate" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Disc" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Net" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Tax" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Total" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for it in invoice.items.all %}
+      <tr>
+        <td class="px-4 py-3">{{ it.description }}<div class="text-xs font-mono text-slate-400">{{ it.variant.sku }}</div></td>
+        <td class="px-4 py-3">{{ it.hsn_code|default:"—" }}</td>
+        <td class="px-4 py-3 text-right">{{ it.quantity }}</td>
+        <td class="px-4 py-3 text-right">{{ it.unit_price }}</td>
+        <td class="px-4 py-3 text-right">{{ it.discount_amount }}</td>
+        <td class="px-4 py-3 text-right">{{ it.taxable_value }}</td>
+        <td class="px-4 py-3 text-right">{% if it.igst_amount > 0 %}{{ it.igst_amount }}{% else %}{{ it.cgst_amount|add:it.sgst_amount }}{% endif %} ({{ it.tax_rate }}%)</td>
+        <td class="px-4 py-3 text-right font-semibold">{{ it.line_total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h2 class="font-semibold text-slate-800 mb-3">{% trans "Totals & Tax Summary" %}</h2>
+    <dl class="space-y-1.5 text-sm">
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Net Taxable / Subtotal" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.taxable_amount }}</dd></div>
+      {% if invoice.total_tax > 0 %}
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Tax" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.total_tax }}</dd></div>
+      {% endif %}
+      <div class="flex justify-between font-bold text-base pt-2 border-t"><dt>{% trans "Grand Total" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.grand_total }}</dd></div>
+      <div class="flex justify-between text-emerald-700"><dt>{% trans "Paid" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.amount_paid }}</dd></div>
+      <div class="flex justify-between text-sky-700"><dt>{% trans "Credited (Credit Notes)" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.credited_total }}</dd></div>
+      <div class="flex justify-between font-bold text-rose-700 pt-1 border-t"><dt>{% trans "Balance Due" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ invoice.balance_due }}</dd></div>
+    </dl>
+  </div>
+
+  <div class="space-y-4">
+    {% if invoice.credit_notes.all %}
+    <div class="bg-white rounded-xl border border-slate-200 p-5">
+      <h2 class="font-semibold text-slate-800 mb-2">{% trans "Linked Credit Notes" %}</h2>
+      <ul class="text-sm space-y-1">
+        {% for cn in invoice.credit_notes.all %}
+        <li class="flex justify-between"><span>{{ cn.credit_note_number }} ({{ cn.issue_date }})</span><span class="font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ cn.total_amount }}</span></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    {% if user.is_owner or user.is_manager %}
+      {% if invoice.status != 'CANCELLED' and invoice.amount_paid == 0 and not invoice.credit_notes.all %}
+      <div class="bg-white rounded-xl border border-rose-200 p-5">
+        <h2 class="font-semibold text-rose-800 mb-2">{% trans "Cancel Invoice" %}</h2>
+        <p class="text-xs text-slate-500 mb-3">{% trans "Issued invoices cannot be deleted. Cancelling restores stock and marks the invoice CANCELLED." %}</p>
+        <form method="post" action="{% url 'invoicing:invoice_cancel' invoice.pk %}" class="flex gap-2" onsubmit="return confirm('Cancel this invoice and restore stock?');">
+          {% csrf_token %}
+          <input type="text" name="cancel_reason" placeholder="{% trans 'Cancellation reason...' %}" required />
+          <button type="submit" class="px-4 py-2 bg-rose-600 text-white rounded-lg text-sm font-semibold shrink-0">{% trans "Cancel Invoice" %}</button>
+        </form>
+      </div>
+      {% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

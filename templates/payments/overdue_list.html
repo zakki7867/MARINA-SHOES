@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Overdue Accounts" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<h1 class="text-2xl font-bold text-slate-900 mb-5">{% trans "Overdue Invoices" %}</h1>
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr><th class="px-4 py-3">{% trans "Invoice #" %}</th><th class="px-4 py-3">{% trans "Customer" %}</th><th class="px-4 py-3">{% trans "Due Date" %}</th><th class="px-4 py-3 text-right">{% trans "Total" %}</th><th class="px-4 py-3 text-right">{% trans "Balance Due" %}</th><th class="px-4 py-3 text-right">{% trans "Action" %}</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for inv in overdue_invoices %}
+      <tr>
+        <td class="px-4 py-3 font-mono text-xs font-semibold"><a href="{% url 'invoicing:invoice_detail' inv.pk %}" class="text-sky-700 hover:underline">{{ inv.invoice_number }}</a></td>
+        <td class="px-4 py-3">{{ inv.customer.name }}</td>
+        <td class="px-4 py-3 text-rose-700 font-semibold">{{ inv.due_date }}</td>
+        <td class="px-4 py-3 text-right">{{ store_settings.currency_symbol|default:"KD" }} {{ inv.grand_total }}</td>
+        <td class="px-4 py-3 text-right font-bold text-rose-700">{{ store_settings.currency_symbol|default:"KD" }} {{ inv.balance_due }}</td>
+        <td class="px-4 py-3 text-right"><a href="{% url 'payments:payment_list' %}?customer={{ inv.customer_id }}&invoice={{ inv.pk }}" class="text-sky-600 font-semibold hover:underline">{% trans "Collect" %}</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="px-4 py-8 text-center text-emerald-700 font-medium">{% trans "No overdue invoices." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

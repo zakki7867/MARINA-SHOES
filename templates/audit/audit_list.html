@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Audit Log" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-6">
+  <h1 class="text-2xl font-bold text-slate-900">{% trans "Audit Log" %}</h1>
+  <p class="text-sm text-slate-500">{% trans "Immutable record of critical creates, edits, cancellations, and adjustments" %}</p>
+</div>
+
+<form method="get" class="bg-white rounded-xl border border-slate-200 p-4 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search user, object, notes...' %}" />
+  <select name="action">
+    <option value="">{% trans "All Actions" %}</option>
+    {% for val, label in actions %}
+    <option value="{{ val }}" {% if request.GET.action == val %}selected{% endif %}>{{ label }}</option>
+    {% endfor %}
+  </select>
+  <input type="text" name="model" value="{{ request.GET.model }}" placeholder="{% trans 'Model (e.g. Invoice)' %}" />
+  <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold hover:bg-slate-800">{% trans "Filter" %}</button>
+</form>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "Timestamp" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "User" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Action" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Entity" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Notes" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for log in logs %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 whitespace-nowrap text-slate-600">{{ log.created_at|date:"Y-m-d H:i:s" }}</td>
+        <td class="px-4 py-3 font-medium">{{ log.user.username|default:"System" }}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded bg-slate-100 text-xs font-semibold">{{ log.action }}</span></td>
+        <td class="px-4 py-3">{{ log.model_name }} #{{ log.object_id }} ({{ log.object_repr }})</td>
+        <td class="px-4 py-3 text-slate-600">{{ log.notes|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="px-4 py-8 text-center text-slate-500">{% trans "No audit entries recorded yet." %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

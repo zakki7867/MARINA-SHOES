@@ -1,0 +1,1898 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: MARINA SHOES ERP 1.0\n"
+"Language: ar\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=6; plural=(n==0 ? 0 : n==1 ? 1 : n==2 ? 2 : n%100>=3 && n%100<=10 ? 3 : n%100>=11 ? 4 : 5);\n"
+
+msgid "+ Add Customer"
+msgstr "+ إضافة عميل"
+
+msgid "+ Add Row"
+msgstr "+ إضافة صف"
+
+msgid "+ Add Staff User"
+msgstr "+ إضافة موظف"
+
+msgid "+ Add Supplier"
+msgstr "+ إضافة مورد"
+
+msgid "+ Add Variant"
+msgstr "+ إضافة صنف فرعي"
+
+msgid "+ New Invoice"
+msgstr "+ فاتورة جديدة"
+
+msgid "+ New Product"
+msgstr "+ منتج جديد"
+
+msgid "+ New Purchase Order"
+msgstr "+ أمر شراء جديد"
+
+msgid "+ New Sales Order"
+msgstr "+ أمر بيع جديد"
+
+msgid "+ Receive Goods"
+msgstr "+ استلام بضاعة"
+
+msgid "+ Receive Payment"
+msgstr "+ استلام دفعة"
+
+msgid "+ Row"
+msgstr "+ صف"
+
+msgid "0-30 Days"
+msgstr "0-30 يوم"
+
+msgid "0-30, 31-60, 61-90, 90+ days payables"
+msgstr "أعمار مستحقات الموردين 0-30، 31-60، 61-90، +90 يوماً"
+
+msgid "0-30, 31-60, 61-90, 90+ days receivables"
+msgstr "أعمار مستحقات العملاء 0-30، 31-60، 61-90، +90 يوماً"
+
+msgid "31-60 Days"
+msgstr "31-60 يوم"
+
+msgid "61-90 Days"
+msgstr "61-90 يوم"
+
+msgid "90+ Days"
+msgstr "+90 يوم"
+
+msgid "Accepted"
+msgstr "المقبول"
+
+msgid "Access Denied"
+msgstr "تم رفض الوصول"
+
+msgid "Access Denied (403)"
+msgstr "تم رفض الوصول (403)"
+
+msgid "Action"
+msgstr "الإجراء"
+
+msgid "Actions"
+msgstr "الإجراءات"
+
+msgid "Activate"
+msgstr "تفعيل"
+
+msgid "Active"
+msgstr "نشط"
+
+msgid "Active Row Qty"
+msgstr "كمية الصف المحدد"
+
+msgid "Actual Cash & Bank"
+msgstr "الرصيد الفعلي للصندوق والبنك"
+
+msgid "Add"
+msgstr "إضافة"
+
+msgid "Add Customer"
+msgstr "إضافة عميل"
+
+msgid "Add Location"
+msgstr "إضافة موقع"
+
+msgid "Add Size / Color Variant"
+msgstr "إضافة مقاس / لون"
+
+msgid "Add Staff User"
+msgstr "إضافة موظف"
+
+msgid "Add Store / Warehouse"
+msgstr "إضافة متجر / مستودع"
+
+msgid "Add Supplier"
+msgstr "إضافة مورد"
+
+msgid "Adjust"
+msgstr "تعديل"
+
+msgid "Adjustment (+/-)"
+msgstr "تعديل (+/-)"
+
+msgid "Administration"
+msgstr "الإدارة"
+
+msgid "Aging Report"
+msgstr "تقرير الأعمار"
+
+msgid "Aging Reports"
+msgstr "تقارير أعمار الديون"
+
+msgid "All Actions"
+msgstr "جميع الإجراءات"
+
+msgid "All Brands"
+msgstr "جميع العلامات التجارية"
+
+msgid "All Categories"
+msgstr "جميع الفئات"
+
+msgid "All Invoices"
+msgstr "جميع الفواتير"
+
+msgid "All Orders"
+msgstr "جميع الطلبات"
+
+msgid "All Products"
+msgstr "جميع المنتجات"
+
+msgid "All Receipts"
+msgstr "جميع سندات الاستلام"
+
+msgid "All Reports"
+msgstr "جميع التقارير"
+
+msgid "All Reports & Exports"
+msgstr "جميع التقارير والتصدير"
+
+msgid "All Statuses"
+msgstr "جميع الحالات"
+
+msgid "All Types"
+msgstr "جميع الأنواع"
+
+msgid "All tracked SKUs are above reorder level."
+msgstr "جميع الأصناف المتابعة أعلى من حد إعادة الطلب."
+
+msgid "All variants are above reorder levels."
+msgstr "جميع الأصناف أعلى من مستويات إعادة الطلب."
+
+msgid "All variants, current stock, cost & valuation"
+msgstr "جميع الأصناف والمخزون الحالي والتكلفة والتقييم"
+
+msgid "Allow sale even if customer credit limit is exceeded"
+msgstr "السماح بالبيع حتى مع تجاوز الحد الائتماني للعميل"
+
+msgid "Amount"
+msgstr "المبلغ"
+
+msgid "Amount Paid"
+msgstr "المبلغ المدفوع"
+
+msgid "Amount Paid Now (0 = Credit)"
+msgstr "المبلغ المدفوع الآن (0 = آجل)"
+
+msgid "Any difference between system stock and physical count automatically posts a correcting adjustment movement."
+msgstr "أي فرق بين مخزون النظام والجرد الفعلي يُسجَّل تلقائياً كحركة تسوية."
+
+msgid "Apply"
+msgstr "تطبيق"
+
+msgid "Apply Advance"
+msgstr "خصم من الرصيد المقدم"
+
+msgid "Archive"
+msgstr "أرشفة"
+
+msgid "Audit Log"
+msgstr "سجل التدقيق"
+
+msgid "Back to Customer"
+msgstr "العودة للعميل"
+
+msgid "Back to Dashboard"
+msgstr "العودة للوحة التحكم"
+
+msgid "Back to Overview"
+msgstr "العودة للملخص"
+
+msgid "Back to Product"
+msgstr "العودة للمنتج"
+
+msgid "Balance"
+msgstr "الرصيد"
+
+msgid "Balance Due"
+msgstr "الرصيد المستحق"
+
+msgid "Balance Payable:"
+msgstr "الرصيد المستحق للدفع:"
+
+msgid "Bank / KNET / Cheque Balance"
+msgstr "رصيد البنك / كي نت / الشيكات"
+
+msgid "Bank Book"
+msgstr "دفتر البنك"
+
+msgid "Bank Transfer"
+msgstr "تحويل بنكي"
+
+msgid "Bank/KNET:"
+msgstr "البنك/كي نت:"
+
+msgid "Bill To:"
+msgstr "فاتورة إلى:"
+
+msgid "Billing Staff"
+msgstr "موظف المبيعات (الكاشير)"
+
+msgid "Brand / Category"
+msgstr "العلامة / الفئة"
+
+msgid "Brands"
+msgstr "العلامات التجارية"
+
+msgid "By"
+msgstr "بواسطة"
+
+msgid "CR / Tax ID:"
+msgstr "السجل التجاري / الرقم الضريبي:"
+
+msgid "Cancel"
+msgstr "إلغاء"
+
+msgid "Cancel Invoice"
+msgstr "إلغاء الفاتورة"
+
+msgid "Cancellation reason..."
+msgstr "سبب الإلغاء..."
+
+msgid "Cancelled"
+msgstr "ملغاة"
+
+msgid "Cash"
+msgstr "نقداً"
+
+msgid "Cash Book"
+msgstr "دفتر الصندوق"
+
+msgid "Cash Book Balance"
+msgstr "رصيد الصندوق النقدي"
+
+msgid "Cash/KNET Refund Amount (Optional)"
+msgstr "مبلغ الاسترداد نقداً/كي نت (اختياري)"
+
+msgid "Cash:"
+msgstr "نقداً:"
+
+msgid "Categories"
+msgstr "الفئات"
+
+msgid "Categories & Brands"
+msgstr "الفئات والعلامات التجارية"
+
+msgid "Categorized store operating expenses"
+msgstr "المصروفات التشغيلية المصنفة للمتجر"
+
+msgid "Category"
+msgstr "الفئة"
+
+msgid "Change"
+msgstr "التغيير"
+
+msgid "Cheque"
+msgstr "شيك"
+
+msgid "Clear Bill"
+msgstr "مسح الفاتورة"
+
+msgid "Closing Balance:"
+msgstr "الرصيد الختامي:"
+
+msgid "Code"
+msgstr "الرمز"
+
+msgid "Code:"
+msgstr "الرمز:"
+
+msgid "Collect"
+msgstr "تحصيل"
+
+msgid "Collections"
+msgstr "التحصيلات"
+
+msgid "Columns supported:"
+msgstr "الأعمدة المدعومة:"
+
+msgid "Comparison of B2B wholesale vs retail POS"
+msgstr "مقارنة مبيعات الجملة بمبيعات التجزئة"
+
+msgid "Complete Exchange"
+msgstr "إتمام الاستبدال"
+
+msgid "Complete Sale"
+msgstr "إتمام البيع"
+
+msgid "Complete Sale & Issue Invoice"
+msgstr "إتمام البيع وإصدار الفاتورة"
+
+msgid "Configure store details, governorate/region, currency (KD), and negative-stock policy."
+msgstr "إعداد بيانات المتجر والمحافظة/المنطقة والعملة (د.ك) وسياسة المخزون السالب."
+
+msgid "Configured Locations"
+msgstr "المواقع المُعدّة"
+
+msgid "Confirmed"
+msgstr "مؤكد"
+
+msgid "Convert & Issue Invoice"
+msgstr "تحويل وإصدار الفاتورة"
+
+msgid "Cost"
+msgstr "التكلفة"
+
+msgid "Count #"
+msgstr "رقم الجرد"
+
+msgid "Count Date"
+msgstr "تاريخ الجرد"
+
+msgid "Counted"
+msgstr "المعدود"
+
+msgid "Counted Variants"
+msgstr "الأصناف المعدودة"
+
+msgid "Create Invoice"
+msgstr "إنشاء فاتورة"
+
+msgid "Create Purchase Order"
+msgstr "إنشاء أمر شراء"
+
+msgid "Create Sales Order"
+msgstr "إنشاء أمر بيع"
+
+msgid "Credit (-)"
+msgstr "دائن (-)"
+
+msgid "Credit Ledger"
+msgstr "سجل الائتمان"
+
+msgid "Credit Limit"
+msgstr "الحد الائتماني"
+
+msgid "Credit Note #"
+msgstr "رقم إشعار الدائن"
+
+msgid "Credit Notes"
+msgstr "إشعارات الدائن"
+
+msgid "Credited"
+msgstr "المخصوم (إشعارات دائن)"
+
+msgid "Credited (Credit Notes)"
+msgstr "المخصوم (إشعارات دائن)"
+
+msgid "Current Stock"
+msgstr "المخزون الحالي"
+
+msgid "Current Stock:"
+msgstr "المخزون الحالي:"
+
+msgid "Customer"
+msgstr "العميل"
+
+msgid "Customer Aging"
+msgstr "أعمار ديون العملاء"
+
+msgid "Customer Credit Ledger"
+msgstr "كشف حسابات العملاء"
+
+msgid "Customer Ledger:"
+msgstr "كشف حساب العميل:"
+
+msgid "Customer Receivables"
+msgstr "ذمم العملاء المستحقة"
+
+msgid "Customer Receivables Aging"
+msgstr "أعمار مستحقات العملاء"
+
+msgid "Customer:"
+msgstr "العميل:"
+
+msgid "Customers"
+msgstr "العملاء"
+
+msgid "Daily Sales"
+msgstr "المبيعات اليومية"
+
+msgid "Daily/monthly summaries, Profit & Loss, and tax summary"
+msgstr "الملخصات اليومية والشهرية والأرباح والخسائر والضرائب"
+
+msgid "Damage (-)"
+msgstr "تالف (-)"
+
+msgid "Damaged"
+msgstr "التالف"
+
+msgid "Damaged Stock"
+msgstr "المخزون التالف"
+
+msgid "Damaged pairs written off"
+msgstr "الأزواج التالفة المشطوبة"
+
+msgid "Damaged — Write off"
+msgstr "تالف — شطب من المخزون"
+
+msgid "Dashboard"
+msgstr "لوحة التحكم"
+
+msgid "Date"
+msgstr "التاريخ"
+
+msgid "Date / Due"
+msgstr "التاريخ / الاستحقاق"
+
+msgid "Date:"
+msgstr "التاريخ:"
+
+msgid "Day-by-day invoice count & revenue"
+msgstr "عدد الفواتير والإيرادات يومياً"
+
+msgid "Deactivate"
+msgstr "تعطيل"
+
+msgid "Debit (+)"
+msgstr "مدين (+)"
+
+msgid "Default"
+msgstr "افتراضي"
+
+msgid "Delta"
+msgstr "الفرق"
+
+msgid "Disc"
+msgstr "الخصم"
+
+msgid "Disc %"
+msgstr "الخصم %"
+
+msgid "Download CSV"
+msgstr "تنزيل CSV"
+
+msgid "Download Excel (.xlsx)"
+msgstr "تنزيل Excel (.xlsx)"
+
+msgid "Download PDF"
+msgstr "تنزيل PDF"
+
+msgid "Download all active product variants with current stock and pricing."
+msgstr "تنزيل جميع الأصناف النشطة مع المخزون والأسعار الحالية."
+
+msgid "Draft"
+msgstr "مسودة"
+
+msgid "Due"
+msgstr "الاستحقاق"
+
+msgid "Due Date"
+msgstr "تاريخ الاستحقاق"
+
+msgid "Due Date (Optional)"
+msgstr "تاريخ الاستحقاق (اختياري)"
+
+msgid "Due:"
+msgstr "الاستحقاق:"
+
+msgid "Edit"
+msgstr "تعديل"
+
+msgid "Edit Customer"
+msgstr "تعديل عميل"
+
+msgid "Edit Customer:"
+msgstr "تعديل العميل:"
+
+msgid "Edit Product"
+msgstr "تعديل منتج"
+
+msgid "Edit Product:"
+msgstr "تعديل المنتج:"
+
+msgid "Edit Supplier"
+msgstr "تعديل مورد"
+
+msgid "Edit Supplier:"
+msgstr "تعديل المورد:"
+
+msgid "Edit User"
+msgstr "تعديل مستخدم"
+
+msgid "Edit User:"
+msgstr "تعديل المستخدم:"
+
+msgid "Edit Variant"
+msgstr "تعديل الصنف"
+
+msgid "Edit Variant:"
+msgstr "تعديل الصنف:"
+
+msgid "Electricity"
+msgstr "الكهرباء"
+
+msgid "Entity"
+msgstr "الكيان"
+
+msgid "Est. Pre-Tax / Net"
+msgstr "الصافي التقديري"
+
+msgid "Every receipt automatically posts purchase stock movements"
+msgstr "كل استلام يسجل تلقائياً حركات مخزون شراء"
+
+msgid "Excel (.xlsx)"
+msgstr "Excel (.xlsx)"
+
+msgid "Exchange"
+msgstr "استبدال"
+
+msgid "Exchange for"
+msgstr "استبدال للفاتورة"
+
+msgid "Execute Transfer"
+msgstr "تنفيذ التحويل"
+
+msgid "Expected Date"
+msgstr "التاريخ المتوقع"
+
+msgid "Expense History"
+msgstr "سجل المصروفات"
+
+msgid "Expense Report"
+msgstr "تقرير المصروفات"
+
+msgid "Expenses"
+msgstr "المصروفات"
+
+msgid "Expenses (Today / Month)"
+msgstr "المصروفات (اليوم / الشهر)"
+
+msgid "Export CSV"
+msgstr "تصدير CSV"
+
+msgid "Export Catalog & Stock"
+msgstr "تصدير الكتالوج والمخزون"
+
+msgid "Export Excel"
+msgstr "تصدير Excel"
+
+msgid "Fast POS Billing"
+msgstr "نقطة البيع السريعة"
+
+msgid "Filter"
+msgstr "تصفية"
+
+msgid "Filter rows..."
+msgstr "تصفية الصفوف..."
+
+msgid "Finance"
+msgstr "المالية"
+
+msgid "Finance Overview"
+msgstr "نظرة عامة مالية"
+
+msgid "Finance: P&L, Tax & Books"
+msgstr "المالية: الأرباح والخسائر والدفاتر"
+
+msgid "Financial Reports"
+msgstr "التقارير المالية"
+
+msgid "Footwear manufacturers and wholesale distributors"
+msgstr "مصنّعو وموزعو الأحذية بالجملة"
+
+msgid "From"
+msgstr "من"
+
+msgid "From Location"
+msgstr "من موقع"
+
+msgid "Full Name"
+msgstr "الاسم الكامل"
+
+msgid "Full immutable stock ledger history"
+msgstr "السجل الكامل لحركات المخزون"
+
+msgid "GRN #"
+msgstr "رقم الاستلام"
+
+msgid "Good — Restock to Inventory"
+msgstr "سليم — إعادة للمخزون"
+
+msgid "Goods Receipts"
+msgstr "سندات استلام البضائع"
+
+msgid "Goods Received"
+msgstr "البضائع المستلمة"
+
+msgid "Goods Received (GRN)"
+msgstr "استلام البضائع"
+
+msgid "Grand Total"
+msgstr "الإجمالي النهائي"
+
+msgid "Gross Profit"
+msgstr "إجمالي الربح"
+
+msgid "Gross Profit Estimate"
+msgstr "تقدير إجمالي الربح"
+
+msgid "Gross Sales (Ex-Tax)"
+msgstr "إجمالي المبيعات (بدون ضريبة)"
+
+msgid "Gross:"
+msgstr "الإجمالي:"
+
+msgid "Highest-billing wholesale & retail customers"
+msgstr "أعلى عملاء الجملة والتجزئة شراءً"
+
+msgid "History"
+msgstr "السجل"
+
+msgid "INVOICE"
+msgstr "فاتورة"
+
+msgid "Immutable record of critical creates, edits, cancellations, and adjustments"
+msgstr "سجل غير قابل للتعديل للعمليات الحساسة والتعديلات والإلغاءات"
+
+msgid "Import & Export Catalog"
+msgstr "استيراد وتصدير الكتالوج"
+
+msgid "Import / Export"
+msgstr "استيراد / تصدير"
+
+msgid "Import Products & Variants"
+msgstr "استيراد المنتجات والأصناف"
+
+msgid "In (Credit)"
+msgstr "وارد (دائن)"
+
+msgid "In-stock SKUs with lowest 30-day sales"
+msgstr "الأصناف المتوفرة ذات المبيعات الأقل خلال 30 يوماً"
+
+msgid "In:"
+msgstr "الوارد:"
+
+msgid "Inactive"
+msgstr "غير نشط"
+
+msgid "Invalid username or password. Please try again."
+msgstr "اسم المستخدم أو كلمة المرور غير صحيحة. يرجى المحاولة مرة أخرى."
+
+msgid "Inventory"
+msgstr "المخزون"
+
+msgid "Inventory Reports"
+msgstr "تقارير المخزون"
+
+msgid "Invoice #"
+msgstr "رقم الفاتورة"
+
+msgid "Invoice #:"
+msgstr "رقم الفاتورة:"
+
+msgid "Invoice / Customer"
+msgstr "الفاتورة / العميل"
+
+msgid "Invoice Date"
+msgstr "تاريخ الفاتورة"
+
+msgid "Invoice Discount"
+msgstr "خصم الفاتورة"
+
+msgid "Invoice Line Items"
+msgstr "بنود الفاتورة"
+
+msgid "Invoice:"
+msgstr "الفاتورة:"
+
+msgid "Invoiced"
+msgstr "المفوتر"
+
+msgid "Invoiced, credited, paid & balances"
+msgstr "المفوتر والمخصوم والمدفوع والأرصدة"
+
+msgid "Invoices"
+msgstr "الفواتير"
+
+msgid "Issue Invoice"
+msgstr "إصدار الفاتورة"
+
+msgid "Issued"
+msgstr "صادرة"
+
+msgid "Issued invoices cannot be deleted. Cancelling restores stock and marks the invoice CANCELLED."
+msgstr "لا يمكن حذف الفواتير الصادرة. يؤدي الإلغاء إلى استعادة المخزون ووسم الفاتورة كملغاة."
+
+msgid "Item"
+msgstr "الصنف"
+
+msgid "Item Code / Tax"
+msgstr "رمز الصنف / الضريبة"
+
+msgid "Items"
+msgstr "الأصناف"
+
+msgid "Items Returned"
+msgstr "الأصناف المرتجعة"
+
+msgid "KNET"
+msgstr "كي نت (KNET)"
+
+msgid "KNET / Card / Bank Reference (optional)"
+msgstr "مرجع كي نت / البطاقة / البنك (اختياري)"
+
+msgid "Kids"
+msgstr "أطفال"
+
+msgid "Language"
+msgstr "اللغة"
+
+msgid "Last mo:"
+msgstr "الشهر الماضي:"
+
+msgid "Ledger Statement"
+msgstr "كشف الحساب"
+
+msgid "Ledger:"
+msgstr "كشف حساب:"
+
+msgid "Less Credit Notes Taxable"
+msgstr "ناقص إشعارات الدائن"
+
+msgid "Less: Cost of Goods Sold (COGS)"
+msgstr "ناقص: تكلفة البضاعة المباعة"
+
+msgid "Less: Credit Notes (Ex-Tax)"
+msgstr "ناقص: إشعارات الدائن"
+
+msgid "Less: Operating Expenses"
+msgstr "ناقص: المصروفات التشغيلية"
+
+msgid "Line Items"
+msgstr "البنود"
+
+msgid "Line Total"
+msgstr "إجمالي البند"
+
+msgid "Linked Credit Notes"
+msgstr "إشعارات الدائن المرتبطة"
+
+msgid "Linked Purchase Order (Optional)"
+msgstr "أمر الشراء المرتبط (اختياري)"
+
+msgid "Location"
+msgstr "الموقع"
+
+msgid "Low Stock"
+msgstr "مخزون منخفض"
+
+msgid "Low Stock Report"
+msgstr "تقرير المخزون المنخفض"
+
+msgid "Low-Stock & Out-of-Stock Alerts"
+msgstr "تنبيهات انخفاض ونفاد المخزون"
+
+msgid "Low-Stock Alerts"
+msgstr "تنبيهات المخزون المنخفض"
+
+msgid "Maintenance"
+msgstr "صيانة"
+
+msgid "Manage shop staff accounts and access permissions"
+msgstr "إدارة حسابات الموظفين وصلاحيات الوصول"
+
+msgid "Manager"
+msgstr "مدير"
+
+msgid "Manager/Owner override: allow issuing even if customer credit limit is exceeded"
+msgstr "تجاوز المدير/المالك: السماح بالإصدار عند تجاوز الحد الائتماني للعميل"
+
+msgid "Men"
+msgstr "رجالي"
+
+msgid "Menu"
+msgstr "القائمة"
+
+msgid "Min"
+msgstr "الحد الأدنى"
+
+msgid "Missing"
+msgstr "الناقص"
+
+msgid "Mode"
+msgstr "الطريقة"
+
+msgid "Model (e.g. Invoice)"
+msgstr "النموذج (مثل Invoice)"
+
+msgid "Month-by-month sales summary"
+msgstr "ملخص المبيعات شهرياً"
+
+msgid "Monthly Sales"
+msgstr "المبيعات الشهرية"
+
+msgid "Monthly Sales Chart"
+msgstr "مخطط المبيعات الشهرية"
+
+msgid "My Profile"
+msgstr "ملفي الشخصي"
+
+msgid "Name"
+msgstr "الاسم"
+
+msgid "Net"
+msgstr "الصافي"
+
+msgid "Net Profit"
+msgstr "صافي الربح"
+
+msgid "Net Regional Tax"
+msgstr "صافي الضريبة الإقليمية"
+
+msgid "Net Revenue"
+msgstr "صافي الإيرادات"
+
+msgid "Net Tax (Local Part 1)"
+msgstr "صافي الضريبة (الجزء المحلي 1)"
+
+msgid "Net Tax (Local Part 2)"
+msgstr "صافي الضريبة (الجزء المحلي 2)"
+
+msgid "Net Tax Liability"
+msgstr "صافي الالتزام الضريبي"
+
+msgid "Net Tax Total"
+msgstr "إجمالي صافي الضريبة"
+
+msgid "Net Taxable / Subtotal"
+msgstr "المجموع الفرعي الصافي"
+
+msgid "Net Taxable Value"
+msgstr "صافي القيمة الخاضعة"
+
+msgid "Net revenue, COGS, expenses & net profit"
+msgstr "صافي الإيرادات وتكلفة البضاعة والمصروفات وصافي الربح"
+
+msgid "New Bill"
+msgstr "فاتورة جديدة"
+
+msgid "New Customer"
+msgstr "عميل جديد"
+
+msgid "New Invoice"
+msgstr "فاتورة جديدة"
+
+msgid "New Product"
+msgstr "منتج جديد"
+
+msgid "New Purchase Order"
+msgstr "أمر شراء جديد"
+
+msgid "New Sales Order"
+msgstr "أمر بيع جديد"
+
+msgid "New Shoe Product"
+msgstr "منتج حذاء جديد"
+
+msgid "New Supplier"
+msgstr "مورد جديد"
+
+msgid "Next"
+msgstr "التالي"
+
+msgid "No audit entries recorded yet."
+msgstr "لا توجد سجلات تدقيق بعد."
+
+msgid "No brands yet."
+msgstr "لا توجد علامات تجارية بعد."
+
+msgid "No categories yet."
+msgstr "لا توجد فئات بعد."
+
+msgid "No credit notes issued yet."
+msgstr "لم تُصدر إشعارات دائن بعد."
+
+msgid "No customers added yet."
+msgstr "لم تتم إضافة عملاء بعد."
+
+msgid "No data available for this report."
+msgstr "لا توجد بيانات لهذا التقرير."
+
+msgid "No expenses recorded yet."
+msgstr "لم تُسجل مصروفات بعد."
+
+msgid "No goods receipts recorded yet."
+msgstr "لم تُسجل سندات استلام بعد."
+
+msgid "No goods received."
+msgstr "لا توجد بضائع مستلمة."
+
+msgid "No invoiced sales recorded yet."
+msgstr "لم تُسجل مبيعات مفوترة بعد."
+
+msgid "No invoices created yet."
+msgstr "لم يتم إنشاء فواتير بعد."
+
+msgid "No invoices yet."
+msgstr "لا توجد فواتير بعد."
+
+msgid "No matching variants found."
+msgstr "لم يتم العثور على أصناف مطابقة."
+
+msgid "No open customer receivables."
+msgstr "لا توجد ذمم عملاء مفتوحة."
+
+msgid "No open supplier payables."
+msgstr "لا توجد مستحقات موردين مفتوحة."
+
+msgid "No overdue invoices."
+msgstr "لا توجد فواتير متأخرة."
+
+msgid "No payments recorded yet."
+msgstr "لم تُسجل مدفوعات بعد."
+
+msgid "No payments recorded."
+msgstr "لم تُسجل مدفوعات."
+
+msgid "No pending customer receivables."
+msgstr "لا توجد مستحقات عملاء معلقة."
+
+msgid "No pending supplier balances."
+msgstr "لا توجد أرصدة موردين معلقة."
+
+msgid "No physical counts recorded yet."
+msgstr "لم يُسجل أي جرد فعلي بعد."
+
+msgid "No products found."
+msgstr "لم يتم العثور على منتجات."
+
+msgid "No purchase orders created yet."
+msgstr "لم يتم إنشاء أوامر شراء بعد."
+
+msgid "No sales orders yet."
+msgstr "لا توجد أوامر بيع بعد."
+
+msgid "No sales returns recorded yet."
+msgstr "لم تُسجل مرتجعات مبيعات بعد."
+
+msgid "No sales yet."
+msgstr "لا توجد مبيعات بعد."
+
+msgid "No stock movements recorded yet."
+msgstr "لم تُسجل حركات مخزون بعد."
+
+msgid "No stock movements yet."
+msgstr "لا توجد حركات مخزون بعد."
+
+msgid "No stock transfers recorded yet."
+msgstr "لم تُسجل تحويلات مخزون بعد."
+
+msgid "No supplier payments recorded."
+msgstr "لم تُسجل مدفوعات موردين."
+
+msgid "No suppliers added yet."
+msgstr "لم تتم إضافة موردين بعد."
+
+msgid "No transactions in this book yet."
+msgstr "لا توجد معاملات في هذا الدفتر بعد."
+
+msgid "No valued stock on hand yet."
+msgstr "لا يوجد مخزون مقيّم حالياً."
+
+msgid "No variants added yet."
+msgstr "لم تتم إضافة مقاسات/ألوان بعد."
+
+msgid "Notes"
+msgstr "ملاحظات"
+
+msgid "Office Expense"
+msgstr "مصروفات مكتبية"
+
+msgid "Open Bank Book"
+msgstr "فتح دفتر البنك"
+
+msgid "Open Cash Book"
+msgstr "فتح دفتر الصندوق"
+
+msgid "Open POS"
+msgstr "فتح نقطة البيع"
+
+msgid "Opening Balance"
+msgstr "الرصيد الافتتاحي"
+
+msgid "Opening Balance:"
+msgstr "الرصيد الافتتاحي:"
+
+msgid "Opening Stock (+)"
+msgstr "مخزون افتتاحي (+)"
+
+msgid "Order #"
+msgstr "رقم الطلب"
+
+msgid "Order Date"
+msgstr "تاريخ الطلب"
+
+msgid "Order Items"
+msgstr "بنود الطلب"
+
+msgid "Order Total (Pre-Tax)"
+msgstr "إجمالي الطلب (قبل الضريبة)"
+
+msgid "Order footwear stock from suppliers"
+msgstr "طلب مخزون الأحذية من الموردين"
+
+msgid "Ordered"
+msgstr "تم الطلب"
+
+msgid "Original Invoice:"
+msgstr "الفاتورة الأصلية:"
+
+msgid "Other"
+msgstr "أخرى"
+
+msgid "Out (Debit)"
+msgstr "صادر (مدين)"
+
+msgid "Out:"
+msgstr "الصادر:"
+
+msgid "Outstanding"
+msgstr "المستحق"
+
+msgid "Outstanding Balance"
+msgstr "الرصيد المستحق"
+
+msgid "Outstanding balances across wholesale & retail accounts"
+msgstr "الأرصدة المستحقة على حسابات الجملة والتجزئة"
+
+msgid "Outward Taxable"
+msgstr "المبيعات الصادرة الخاضعة"
+
+msgid "Outward sales & tax less credit notes"
+msgstr "المبيعات والضرائب ناقص إشعارات الدائن"
+
+msgid "Overdue"
+msgstr "متأخرة"
+
+msgid "Overdue Accounts"
+msgstr "الحسابات المتأخرة"
+
+msgid "Overdue Invoices"
+msgstr "الفواتير المتأخرة"
+
+msgid "Owner"
+msgstr "المالك"
+
+msgid "PO #"
+msgstr "رقم أمر الشراء"
+
+msgid "POS"
+msgstr "الكاشير"
+
+msgid "POS Billing"
+msgstr "نقطة البيع (الكاشير)"
+
+msgid "Packaging"
+msgstr "التغليف"
+
+msgid "Page"
+msgstr "صفحة"
+
+msgid "Paid"
+msgstr "مدفوعة"
+
+msgid "Pairs"
+msgstr "زوج"
+
+msgid "Partially Paid"
+msgstr "مدفوعة جزئياً"
+
+msgid "Partially Received"
+msgstr "مستلم جزئياً"
+
+msgid "Particulars"
+msgstr "البيان"
+
+msgid "Password"
+msgstr "كلمة المرور"
+
+msgid "Pay Suppliers"
+msgstr "سداد الموردين"
+
+msgid "Payable Balance"
+msgstr "الرصيد المستحق للدفع"
+
+msgid "Payable balances across all suppliers"
+msgstr "الأرصدة المستحقة لجميع الموردين"
+
+msgid "Payment #"
+msgstr "رقم الدفعة"
+
+msgid "Payment Mode"
+msgstr "طريقة الدفع"
+
+msgid "Payments Made"
+msgstr "المدفوعات المنفذة"
+
+msgid "Pending Customer Payments"
+msgstr "دفعات العملاء المعلقة"
+
+msgid "Pending Payments"
+msgstr "المدفوعات المعلقة"
+
+msgid "Phone"
+msgstr "الهاتف"
+
+msgid "Phone:"
+msgstr "الهاتف:"
+
+msgid "Physical Stock Counts"
+msgstr "الجرد الفعلي للمخزون"
+
+msgid "Please add at least one shoe variant to the bill."
+msgstr "يرجى إضافة صنف حذاء واحد على الأقل إلى الفاتورة."
+
+msgid "Please review highlighted fields in Received Items below."
+msgstr "يرجى مراجعة الحقول المميزة في الأصناف المستلمة أدناه."
+
+msgid "Post Goods Receipt"
+msgstr "ترحيل استلام البضائع"
+
+msgid "Post Stock Count"
+msgstr "ترحيل الجرد"
+
+msgid "Post Stock Movement"
+msgstr "ترحيل حركة المخزون"
+
+msgid "Previous"
+msgstr "السابق"
+
+msgid "Price (Auto)"
+msgstr "السعر (تلقائي)"
+
+msgid "Price List"
+msgstr "قائمة الأسعار"
+
+msgid "Price List:"
+msgstr "قائمة الأسعار:"
+
+msgid "Pricing:"
+msgstr "التسعير:"
+
+msgid "Print"
+msgstr "طباعة"
+
+msgid "Print Invoice"
+msgstr "طباعة الفاتورة"
+
+msgid "Print View"
+msgstr "معاينة الطباعة"
+
+msgid "Process Product Exchange"
+msgstr "تنفيذ استبدال منتج"
+
+msgid "Process Sales Return"
+msgstr "تنفيذ مرتجع مبيعات"
+
+msgid "Processing..."
+msgstr "جارٍ المعالجة..."
+
+msgid "Product"
+msgstr "المنتج"
+
+msgid "Product Variant"
+msgstr "صنف المنتج"
+
+msgid "Products & Inventory"
+msgstr "المنتجات والمخزون"
+
+msgid "Products & Variants"
+msgstr "المنتجات والأصناف"
+
+msgid "Profile"
+msgstr "الملف الشخصي"
+
+msgid "Profit & Loss"
+msgstr "الأرباح والخسائر"
+
+msgid "Profit & Loss Statement"
+msgstr "قائمة الأرباح والخسائر"
+
+msgid "Profit Report"
+msgstr "تقرير الأرباح"
+
+msgid "Purchase (+)"
+msgstr "شراء (+)"
+
+msgid "Purchase Orders"
+msgstr "أوامر الشراء"
+
+msgid "Purchase Reports"
+msgstr "تقارير المشتريات"
+
+msgid "Purchase Return (-)"
+msgstr "مرتجع شراء (-)"
+
+msgid "Purchases"
+msgstr "المشتريات"
+
+msgid "Qty"
+msgstr "الكمية"
+
+msgid "Qty Received"
+msgstr "الكمية المستلمة"
+
+msgid "Quick-Add Match"
+msgstr "إضافة سريعة للمطابق"
+
+msgid "R:"
+msgstr "قطاعي:"
+
+msgid "Rate"
+msgstr "السعر"
+
+msgid "Reason"
+msgstr "السبب"
+
+msgid "Receipt #"
+msgstr "رقم الإيصال"
+
+msgid "Receivables"
+msgstr "الذمم المدينة"
+
+msgid "Receivables & Ledger"
+msgstr "المستحقات وكشف الحساب"
+
+msgid "Receivables & Payables Aging"
+msgstr "أعمار الذمم المدينة والدائنة"
+
+msgid "Receive"
+msgstr "استلام"
+
+msgid "Receive Customer Payment"
+msgstr "استلام دفعة من عميل"
+
+msgid "Receive Goods"
+msgstr "استلام بضاعة"
+
+msgid "Receive Goods (Create GRN & Update Stock)"
+msgstr "استلام البضائع (إنشاء سند وتحديث المخزون)"
+
+msgid "Receive Payment"
+msgstr "استلام دفعة"
+
+msgid "Receive Payments"
+msgstr "استلام المدفوعات"
+
+msgid "Received"
+msgstr "مستلم"
+
+msgid "Received Date"
+msgstr "تاريخ الاستلام"
+
+msgid "Received Items"
+msgstr "الأصناف المستلمة"
+
+msgid "Received:"
+msgstr "تاريخ الاستلام:"
+
+msgid "Receiving Location"
+msgstr "موقع الاستلام"
+
+msgid "Recent Customer Receipts"
+msgstr "أحدث مقبوضات العملاء"
+
+msgid "Recent Invoices"
+msgstr "أحدث الفواتير"
+
+msgid "Recent Physical Counts"
+msgstr "أحدث عمليات الجرد"
+
+msgid "Recent Stock Movements"
+msgstr "أحدث حركات المخزون"
+
+msgid "Recent Supplier Payments"
+msgstr "أحدث مدفوعات الموردين"
+
+msgid "Recent Transfers"
+msgstr "أحدث التحويلات"
+
+msgid "Record Expense"
+msgstr "تسجيل مصروف"
+
+msgid "Record Movement"
+msgstr "تسجيل حركة"
+
+msgid "Record Payment"
+msgstr "تسجيل دفعة"
+
+msgid "Record Physical Stock Count"
+msgstr "تسجيل الجرد الفعلي للمخزون"
+
+msgid "Record Receipt"
+msgstr "تسجيل السند"
+
+msgid "Record Return & Credit Note"
+msgstr "تسجيل المرتجع وإشعار الدائن"
+
+msgid "Record Stock Movement"
+msgstr "تسجيل حركة مخزون"
+
+msgid "Record Supplier Payment"
+msgstr "تسجيل دفعة لمورد"
+
+msgid "Ref"
+msgstr "المرجع"
+
+msgid "Reference"
+msgstr "المرجع"
+
+msgid "Refund Mode"
+msgstr "طريقة الاسترداد"
+
+msgid "Region"
+msgstr "المنطقة"
+
+msgid "Region / CR No."
+msgstr "المنطقة / السجل التجاري"
+
+msgid "Region / Governorate"
+msgstr "المنطقة / المحافظة"
+
+msgid "Region:"
+msgstr "المنطقة:"
+
+msgid "Remove Row"
+msgstr "حذف الصف"
+
+msgid "Rent"
+msgstr "الإيجار"
+
+msgid "Reorder"
+msgstr "حد الطلب"
+
+msgid "Reorder Level"
+msgstr "حد إعادة الطلب"
+
+msgid "Replacement Items"
+msgstr "الأصناف البديلة"
+
+msgid "Reports"
+msgstr "التقارير"
+
+msgid "Reports & Exports"
+msgstr "التقارير والتصدير"
+
+msgid "Retail"
+msgstr "قطاعي (تجزئة)"
+
+msgid "Retail Walk-in"
+msgstr "عميل تجزئة مباشر"
+
+msgid "Return #"
+msgstr "رقم المرتجع"
+
+msgid "Return Condition"
+msgstr "حالة المرتجع"
+
+msgid "Return Qty"
+msgstr "كمية المرتجع"
+
+msgid "Returned Items"
+msgstr "الأصناف المرتجعة"
+
+msgid "Revenue grouped by brand"
+msgstr "الإيرادات حسب العلامة التجارية"
+
+msgid "Revenue grouped by footwear category"
+msgstr "الإيرادات حسب فئة الأحذية"
+
+msgid "Reverse"
+msgstr "عكس القيد"
+
+msgid "Reversed"
+msgstr "معكوس"
+
+msgid "Role"
+msgstr "الدور"
+
+msgid "Role:"
+msgstr "الدور:"
+
+msgid "Route"
+msgstr "المسار"
+
+msgid "SKU / Product"
+msgstr "رمز SKU / المنتج"
+
+msgid "Salary"
+msgstr "الرواتب"
+
+msgid "Sale (-)"
+msgstr "بيع (-)"
+
+msgid "Sale Return (+)"
+msgstr "مرتجع مبيعات (+)"
+
+msgid "Sales"
+msgstr "المبيعات"
+
+msgid "Sales & Invoices"
+msgstr "المبيعات والفواتير"
+
+msgid "Sales Invoiced"
+msgstr "المبيعات المفوترة"
+
+msgid "Sales Orders"
+msgstr "أوامر البيع"
+
+msgid "Sales Reports"
+msgstr "تقارير المبيعات"
+
+msgid "Sales Return / Credit Note"
+msgstr "مرتجع مبيعات / إشعار دائن"
+
+msgid "Sales Return for"
+msgstr "مرتجع مبيعات للفاتورة"
+
+msgid "Sales Returns"
+msgstr "مرتجعات المبيعات"
+
+msgid "Sales by Brand"
+msgstr "المبيعات حسب العلامة التجارية"
+
+msgid "Sales by Category"
+msgstr "المبيعات حسب الفئة"
+
+msgid "Sales by Customer"
+msgstr "المبيعات حسب العميل"
+
+msgid "Sales by Product"
+msgstr "المبيعات حسب المنتج"
+
+msgid "Save"
+msgstr "حفظ"
+
+msgid "Save Customer"
+msgstr "حفظ العميل"
+
+msgid "Save Expense"
+msgstr "حفظ المصروف"
+
+msgid "Save Product"
+msgstr "حفظ المنتج"
+
+msgid "Save Sales Order"
+msgstr "حفظ أمر البيع"
+
+msgid "Save Settings"
+msgstr "حفظ الإعدادات"
+
+msgid "Save Supplier"
+msgstr "حفظ المورد"
+
+msgid "Save Variant"
+msgstr "حفظ الصنف"
+
+msgid "Scan barcode or search by shoe name, style code, SKU, or size"
+msgstr "امسح الباركود أو ابحث بالاسم أو رقم الموديل أو SKU أو المقاس"
+
+msgid "Scan barcode or search style / SKU / product / size..."
+msgstr "امسح الباركود أو ابحث عن الموديل / SKU / المنتج / المقاس..."
+
+msgid "Search"
+msgstr "بحث"
+
+msgid "Search invoice # or customer..."
+msgstr "ابحث برقم الفاتورة أو اسم العميل..."
+
+msgid "Search name, SKU, barcode, item code..."
+msgstr "ابحث بالاسم أو SKU أو الباركود أو الرمز..."
+
+msgid "Search name, phone, CR/Tax ID, area..."
+msgstr "ابحث بالاسم أو الهاتف أو السجل التجاري أو المنطقة..."
+
+msgid "Search user, object, notes..."
+msgstr "ابحث بالمستخدم أو السجل أو الملاحظات..."
+
+msgid "Ship To:"
+msgstr "الشحن إلى:"
+
+msgid "Shoe styles, size/color variants, and real-time computed stock"
+msgstr "موديلات الأحذية والمقاسات والألوان والمخزون المحسوب لحظياً"
+
+msgid "Sign In"
+msgstr "تسجيل الدخول"
+
+msgid "Sign Out"
+msgstr "تسجيل الخروج"
+
+msgid "Sign in to access store operations"
+msgstr "سجّل الدخول للوصول إلى عمليات المتجر"
+
+msgid "Size"
+msgstr "المقاس"
+
+msgid "Size & Color Variants"
+msgstr "المقاسات والألوان"
+
+msgid "Size / Color"
+msgstr "المقاس / اللون"
+
+msgid "Size exchange, color swap, etc."
+msgstr "تغيير المقاس أو اللون، إلخ."
+
+msgid "Slow-Moving Stock"
+msgstr "المخزون بطيء الحركة"
+
+msgid "Staff & Roles"
+msgstr "الموظفون والصلاحيات"
+
+msgid "Status"
+msgstr "الحالة"
+
+msgid "Status:"
+msgstr "الحالة:"
+
+msgid "Stock"
+msgstr "المخزون"
+
+msgid "Stock Adjustment"
+msgstr "تعديل المخزون"
+
+msgid "Stock Adjustments"
+msgstr "تسويات المخزون"
+
+msgid "Stock Counts"
+msgstr "جرد المخزون"
+
+msgid "Stock History:"
+msgstr "سجل حركة المخزون:"
+
+msgid "Stock In (+)"
+msgstr "وارد للمخزون (+)"
+
+msgid "Stock Movements"
+msgstr "حركات المخزون"
+
+msgid "Stock Out (-)"
+msgstr "صادر من المخزون (-)"
+
+msgid "Stock Report"
+msgstr "تقرير المخزون"
+
+msgid "Stock Transfers"
+msgstr "تحويلات المخزون"
+
+msgid "Stock Value by Category"
+msgstr "قيمة المخزون حسب الفئة"
+
+msgid "Stock by Color"
+msgstr "المخزون حسب اللون"
+
+msgid "Stock by Location"
+msgstr "المخزون حسب الموقع"
+
+msgid "Stock by Size"
+msgstr "المخزون حسب المقاس"
+
+msgid "Stock is computed exclusively from ledger entries. Negative stock:"
+msgstr "يُحسب المخزون حصراً من قيود الحركات. المخزون السالب:"
+
+msgid "Stock:"
+msgstr "المتوفر:"
+
+msgid "Store / Location"
+msgstr "المتجر / الموقع"
+
+msgid "Store / Showroom"
+msgstr "متجر / صالة عرض"
+
+msgid "Store Settings"
+msgstr "إعدادات المتجر"
+
+msgid "Storekeeper"
+msgstr "أمين المستودع"
+
+msgid "Stores & Warehouses"
+msgstr "المتاجر والمستودعات"
+
+msgid "Style:"
+msgstr "الموديل:"
+
+msgid "Subtotal (Net)"
+msgstr "المجموع الفرعي (الصافي)"
+
+msgid "Supplier"
+msgstr "المورد"
+
+msgid "Supplier Aging"
+msgstr "أعمار مستحقات الموردين"
+
+msgid "Supplier Inv:"
+msgstr "فاتورة المورد:"
+
+msgid "Supplier Invoice #"
+msgstr "رقم فاتورة المورد"
+
+msgid "Supplier Outstanding"
+msgstr "مستحقات الموردين"
+
+msgid "Supplier Payables"
+msgstr "ذمم الموردين"
+
+msgid "Supplier Payables Aging"
+msgstr "أعمار ذمم الموردين"
+
+msgid "Supplier Payments"
+msgstr "مدفوعات الموردين"
+
+msgid "Supplier:"
+msgstr "المورد:"
+
+msgid "Suppliers"
+msgstr "الموردون"
+
+msgid "TAX INVOICE"
+msgstr "فاتورة ضريبية"
+
+msgid "Tax"
+msgstr "الضريبة"
+
+msgid "Tax Exclusive (Tax added on top)"
+msgstr "غير شامل الضريبة (تُضاف الضريبة)"
+
+msgid "Tax Inclusive (Tax included in rate)"
+msgstr "شامل الضريبة (الضريبة ضمن السعر)"
+
+msgid "Tax Mode"
+msgstr "نظام الضريبة"
+
+msgid "Tax Summary"
+msgstr "ملخص الضرائب"
+
+msgid "Tax Summary Report"
+msgstr "تقرير ملخص الضرائب"
+
+msgid "Tax:"
+msgstr "الضريبة:"
+
+msgid "Terms"
+msgstr "شروط الدفع"
+
+msgid "Terms & Conditions:"
+msgstr "الشروط والأحكام:"
+
+msgid "This Month:"
+msgstr "هذا الشهر:"
+
+msgid "Time"
+msgstr "الوقت"
+
+msgid "Timestamp"
+msgstr "التوقيت"
+
+msgid "To"
+msgstr "إلى"
+
+msgid "To Location"
+msgstr "إلى موقع"
+
+msgid "Today's Collections"
+msgstr "تحصيلات اليوم"
+
+msgid "Today's Profit:"
+msgstr "ربح اليوم:"
+
+msgid "Today's Sales (Billed)"
+msgstr "مبيعات اليوم (المفوترة)"
+
+msgid "Today's Summary"
+msgstr "ملخص اليوم"
+
+msgid "Top Customers"
+msgstr "أفضل العملاء"
+
+msgid "Top-Selling Products"
+msgstr "المنتجات الأكثر مبيعاً"
+
+msgid "Total"
+msgstr "الإجمالي"
+
+msgid "Total Due"
+msgstr "إجمالي المستحق"
+
+msgid "Total Invoiced"
+msgstr "إجمالي الفواتير"
+
+msgid "Total KNET Collected:"
+msgstr "إجمالي المحصل عبر كي نت:"
+
+msgid "Total Payable"
+msgstr "إجمالي المستحق للدفع"
+
+msgid "Total pairs grouped by color"
+msgstr "إجمالي الأزواج مجمعة حسب اللون"
+
+msgid "Total pairs grouped by shoe size"
+msgstr "إجمالي الأزواج مجمعة حسب المقاس"
+
+msgid "Totals & Tax Summary"
+msgstr "ملخص الإجماليات والضرائب"
+
+msgid "Transfer #"
+msgstr "رقم التحويل"
+
+msgid "Transfer Date"
+msgstr "تاريخ التحويل"
+
+msgid "Transfer In (+)"
+msgstr "تحويل وارد (+)"
+
+msgid "Transfer Out (-)"
+msgstr "تحويل صادر (-)"
+
+msgid "Transfer Stock Between Locations"
+msgstr "نقل المخزون بين المواقع"
+
+msgid "Transportation"
+msgstr "النقل والمواصلات"
+
+msgid "Type"
+msgstr "النوع"
+
+msgid "Unalloc."
+msgstr "غير مخصص"
+
+msgid "Unisex"
+msgstr "للجنسين"
+
+msgid "Unit Cost"
+msgstr "تكلفة الوحدة"
+
+msgid "Unit Price"
+msgstr "سعر الوحدة"
+
+msgid "Unit:"
+msgstr "الوحدة:"
+
+msgid "Units sold and revenue per SKU"
+msgstr "الكميات المباعة والإيرادات لكل SKU"
+
+msgid "Unpaid & overdue customer invoices"
+msgstr "فواتير العملاء غير المدفوعة والمتأخرة"
+
+msgid "Upcoming Supplier Payments"
+msgstr "مدفوعات الموردين المستحقة"
+
+msgid "Upload & Import"
+msgstr "رفع واستيراد"
+
+msgid "User"
+msgstr "المستخدم"
+
+msgid "Username"
+msgstr "اسم المستخدم"
+
+msgid "Variances"
+msgstr "الفروقات"
+
+msgid "Variant"
+msgstr "الصنف"
+
+msgid "Variant stock per store & warehouse"
+msgstr "مخزون الأصناف حسب كل متجر ومستودع"
+
+msgid "Variants"
+msgstr "الأصناف"
+
+msgid "Variants at or below reorder level"
+msgstr "الأصناف عند أو دون حد إعادة الطلب"
+
+msgid "Variants at or below their reorder level"
+msgstr "الأصناف التي بلغت أو انخفضت عن حد إعادة الطلب"
+
+msgid "View"
+msgstr "عرض"
+
+msgid "View All"
+msgstr "عرض الكل"
+
+msgid "View Invoice"
+msgstr "عرض الفاتورة"
+
+msgid "View Variants"
+msgstr "عرض الأصناف"
+
+msgid "View live business reports or download as CSV / Excel (.xlsx)"
+msgstr "استعراض تقارير العمل الحية أو تنزيلها بصيغة CSV / Excel (.xlsx)"
+
+msgid "W:"
+msgstr "جملة:"
+
+msgid "Warehouse / Godown"
+msgstr "مستودع / مخزن"
+
+msgid "Welcome,"
+msgstr "مرحباً،"
+
+msgid "WhatsApp Share"
+msgstr "مشاركة عبر واتساب"
+
+msgid "Wholesale"
+msgstr "جملة"
+
+msgid "Wholesale & retail invoices"
+msgstr "فواتير الجملة والتجزئة"
+
+msgid "Wholesale Shop"
+msgstr "محل جملة"
+
+msgid "Wholesale and retail orders ready for invoicing"
+msgstr "طلبات الجملة والتجزئة الجاهزة للفوترة"
+
+msgid "Wholesale shops and retail buyers with credit limits"
+msgstr "محلات الجملة وعملاء التجزئة مع الحدود الائتمانية"
+
+msgid "Wholesale vs Retail"
+msgstr "الجملة مقابل التجزئة"
+
+msgid "Women"
+msgstr "نسائي"
+
+msgid "Yesterday:"
+msgstr "الأمس:"
+
+msgid "Your role"
+msgstr "صلاحيتك"
+
+msgid "allowed"
+msgstr "مسموح"
+
+msgid "blocked"
+msgstr "ممنوع"
+
+msgid "days"
+msgstr "يوم"
+
+msgid "does not have permission to access this section."
+msgstr "لا تملك صلاحية الوصول إلى هذا القسم."
+
+msgid "low-stock"
+msgstr "مخزون منخفض"
+
+msgid "of"
+msgstr "من"
+
+msgid "out-of-stock"
+msgstr "نفد من المخزون"
+
+msgid "overdue invoice(s)"
+msgstr "فاتورة متأخرة"
+
+msgid "pairs"
+msgstr "زوج"
+
+msgid "record(s)"
+msgstr "سجل"
+
+msgid "reports"
+msgstr "تقارير"
+
+msgid "vs last mo"
+msgstr "عن الشهر الماضي"

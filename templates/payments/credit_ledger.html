@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Customer Credit Ledger" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-5 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Customer Credit Ledger" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Outstanding balances across wholesale & retail accounts" %}</p>
+  </div>
+  <a href="{% url 'payments:payment_list' %}" class="px-4 py-2 bg-sky-600 text-white rounded-lg text-sm font-semibold">{% trans "+ Receive Payment" %}</a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3">{% trans "Customer" %}</th>
+        <th class="px-4 py-3">{% trans "Type" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Invoiced" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Credited" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Paid" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Credit Limit" %}</th>
+        <th class="px-4 py-3 text-right">{% trans "Outstanding" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for c in customers %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-semibold"><a href="{% url 'customers:customer_detail' c.pk %}" class="text-sky-700 hover:underline">{{ c.name }}</a></td>
+        <td class="px-4 py-3">{{ c.get_customer_type_display }}</td>
+        <td class="px-4 py-3 text-right">{{ c.total_invoiced }}</td>
+        <td class="px-4 py-3 text-right">{{ c.total_credit_notes }}</td>
+        <td class="px-4 py-3 text-right text-emerald-700">{{ c.total_paid }}</td>
+        <td class="px-4 py-3 text-right">{{ c.credit_limit }}</td>
+        <td class="px-4 py-3 text-right font-bold {% if c.outstanding_balance > 0 %}text-rose-700{% else %}text-emerald-700{% endif %}">
+          {{ store_settings.currency_symbol|default:"KD" }} {{ c.outstanding_balance }}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

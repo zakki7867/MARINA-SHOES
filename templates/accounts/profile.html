@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "My Profile" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="max-w-xl bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h1 class="text-xl font-bold text-slate-900 mb-4">{% trans "My Profile" %}</h1>
+  <dl class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+    <div>
+      <dt class="text-slate-500">{% trans "Username" %}</dt>
+      <dd class="font-semibold">{{ user.username }}</dd>
+    </div>
+    <div>
+      <dt class="text-slate-500">{% trans "Role" %}</dt>
+      <dd class="font-semibold">{{ user.get_role_display }}</dd>
+    </div>
+    <div>
+      <dt class="text-slate-500">{% trans "Full Name" %}</dt>
+      <dd class="font-semibold">{{ user.get_full_name|default:"—" }}</dd>
+    </div>
+    <div>
+      <dt class="text-slate-500">{% trans "Phone" %}</dt>
+      <dd class="font-semibold">{{ user.phone|default:"—" }}</dd>
+    </div>
+  </dl>
+</div>
+{% endblock %}

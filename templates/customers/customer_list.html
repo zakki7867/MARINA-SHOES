@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Customers" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Customers" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Wholesale shops and retail buyers with credit limits" %}</p>
+  </div>
+  <a href="{% url 'customers:customer_create' %}" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "+ Add Customer" %}</a>
+</div>
+
+<form method="get" class="bg-white rounded-xl border border-slate-200 p-4 mb-4 grid grid-cols-1 sm:grid-cols-4 gap-3">
+  <input type="text" name="q" value="{{ request.GET.q }}" placeholder="{% trans 'Search name, phone, CR/Tax ID, area...' %}" class="sm:col-span-2" />
+  <select name="type">
+    <option value="">{% trans "All Types" %}</option>
+    <option value="WHOLESALE" {% if request.GET.type == 'WHOLESALE' %}selected{% endif %}>{% trans "Wholesale Shop" %}</option>
+    <option value="RETAIL" {% if request.GET.type == 'RETAIL' %}selected{% endif %}>{% trans "Retail Walk-in" %}</option>
+  </select>
+  <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold">{% trans "Filter" %}</button>
+</form>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "Customer" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Type" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Phone" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Region / CR No." %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Credit Limit" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Balance Due" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Action" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for c in customers %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-semibold text-sky-700"><a href="{% url 'customers:customer_detail' c.pk %}" class="hover:underline">{{ c.name }}</a></td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold {% if c.customer_type == 'WHOLESALE' %}bg-indigo-50 text-indigo-700{% else %}bg-slate-100 text-slate-700{% endif %}">{{ c.get_customer_type_display }}</span></td>
+        <td class="px-4 py-3">{{ c.phone }}</td>
+        <td class="px-4 py-3">{{ c.state_code }} {% if c.gstin %}&middot; {{ c.gstin }}{% endif %}</td>
+        <td class="px-4 py-3 text-right">{{ store_settings.currency_symbol|default:"KD" }} {{ c.credit_limit }}</td>
+        <td class="px-4 py-3 text-right font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ c.outstanding_balance }}</td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <a href="{% url 'customers:customer_detail' c.pk %}" class="text-sky-600 hover:underline">{% trans "View" %}</a>
+          <a href="{% url 'customers:customer_edit' c.pk %}" class="text-slate-600 hover:underline">{% trans "Edit" %}</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="px-4 py-8 text-center text-slate-500">{% trans "No customers added yet." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

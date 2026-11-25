@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "POS Billing" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Fast POS Billing" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Scan barcode or search by shoe name, style code, SKU, or size" %}</p>
+  </div>
+  <div class="flex flex-wrap items-center gap-2">
+    <button type="button" onclick="posResetBill()" class="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold">{% trans "Clear Bill" %}</button>
+    <a href="{% url 'invoicing:invoice_list' %}" class="px-3.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-semibold">{% trans "All Invoices" %}</a>
+  </div>
+</div>
+
+<div class="mb-4 px-3 py-2 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-600 flex flex-wrap gap-x-4 gap-y-1">
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">/</kbd> {% trans "Search" %}</span>
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">Enter</kbd> {% trans "Quick-Add Match" %}</span>
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">+</kbd> / <kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">-</kbd> {% trans "Active Row Qty" %}</span>
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">Del</kbd> {% trans "Remove Row" %}</span>
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">Ctrl+Enter</kbd> {% trans "Complete Sale" %}</span>
+  <span><kbd class="px-1.5 py-0.5 bg-white border border-slate-300 rounded font-mono text-[11px]">Alt+N</kbd> {% trans "New Bill" %}</span>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-5">
+  <!-- Left: Product Search & Variant Grid -->
+  <div class="lg:col-span-5 bg-white rounded-xl border border-slate-200 shadow-sm p-4">
+    <input
+      id="pos-search-input"
+      type="text"
+      name="q"
+      autocomplete="off"
+      placeholder="{% trans 'Scan barcode or search style / SKU / product / size...' %}"
+      autofocus
+      hx-get="{% url 'sales:pos_search' %}"
+      hx-target="#pos-search-results"
+      hx-trigger="input changed delay:150ms, search"
+      class="mb-3"
+    />
+    <div id="pos-search-results" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-2 max-h-[65vh] overflow-y-auto">
+      {% include "sales/partials/pos_search_results.html" %}
+    </div>
+  </div>
+
+  <!-- Right: Bill Cart & Checkout -->
+  <div class="lg:col-span-7 bg-white rounded-xl border border-slate-200 shadow-sm p-5">
+    <form
+      id="pos-form"
+      method="post"
+      data-can-edit-price="{% if can_override_price %}1{% else %}0{% endif %}"
+      data-msg-empty="{% trans 'Please add at least one shoe variant to the bill.' %}"
+      data-msg-processing="{% trans 'Processing...' %}"
+      data-label-stock="{% trans 'Stock' %}"
+      onsubmit="return posHandleSubmit(this)"
+      class="space-y-4"
+    >
+      {% csrf_token %}
+      <input type="hidden" name="pos_token" value="{{ pos_token }}" />
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Customer" %}</label>
+          <select name="customer" onchange="posSyncCustomerType(this)" required>
+            {% for c in customers %}
+            <option value="{{ c.pk }}" data-type="{{ c.customer_type }}">{{ c.name }} ({{ c.get_customer_type_display }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Store / Location" %}</label>
+          <select name="location">
+            {% for loc in locations %}
+            <option value="{{ loc.pk }}" {% if loc.pk == default_location.pk %}selected{% endif %}>{{ loc.name }} ({{ loc.code }})</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Price List" %}</label>
+          <select id="pos-price-list" name="price_list" onchange="posSwitchPriceList()">
+            {% for val, label in price_lists %}
+            <option value="{{ val }}" {% if val == 'RETAIL' %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Tax Mode" %}</label>
+          <select name="tax_mode">
+            {% for val, label in tax_modes %}
+            <option value="{{ val }}" {% if val == default_tax_mode %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div>
+
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600 text-xs">
+            <tr><th class="p-2 text-left">{% trans "Item" %}</th><th class="p-2 text-left">{% trans "Qty" %}</th><th class="p-2 text-left">{% trans "Rate" %}</th><th class="p-2 text-left">{% trans "Disc %" %}</th><th class="p-2 text-right">{% trans "Net" %}</th><th class="p-2"></th></tr>
+          </thead>
+          <tbody id="pos-cart-body"></tbody>
+        </table>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-3 rounded-lg border border-slate-200">
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Invoice Discount" %}</label>
+          <input id="pos-inv-disc" type="number" step="0.001" min="0" name="invoice_discount" value="0.000" oninput="posRecalc()" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Amount Paid Now (0 = Credit)" %}</label>
+          <input type="number" step="0.001" min="0" name="amount_paid" value="0.000" />
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-500 mb-1">{% trans "Payment Mode" %}</label>
+          <select name="payment_mode">
+            {% for val, label in payment_modes %}
+            <option value="{{ val }}">{{ label }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="sm:col-span-2">
+          <input type="text" name="payment_reference" placeholder="{% trans 'KNET / Card / Bank Reference (optional)' %}" />
+        </div>
+        <div class="text-right flex flex-col justify-center">
+          <span class="text-xs text-slate-500">{% trans "Est. Pre-Tax / Net" %}</span>
+          <span class="text-lg font-bold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} <span id="pos-est-total">0.000</span></span>
+        </div>
+      </div>
+
+      {% if user.is_owner or user.is_manager %}
+      <label class="flex items-center gap-2 text-xs text-amber-800 bg-amber-50 border border-amber-200 px-3 py-2 rounded-lg">
+        <input type="checkbox" name="override_credit_limit" />
+        {% trans "Allow sale even if customer credit limit is exceeded" %}
+      </label>
+      {% endif %}
+
+      <button id="pos-submit-btn" type="submit" class="w-full py-3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-bold text-base">
+        {% trans "Complete Sale & Issue Invoice" %}
+      </button>
+    </form>
+  </div>
+</div>
+<script src="{% static 'js/pos.js' %}"></script>
+{% endblock %}

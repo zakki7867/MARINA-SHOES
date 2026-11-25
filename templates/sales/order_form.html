@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "New Sales Order" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="max-w-4xl bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h1 class="text-xl font-bold text-slate-900 mb-4">{% trans "Create Sales Order" %}</h1>
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    {% if form.non_field_errors %}<div class="p-3 rounded bg-rose-50 text-rose-700 text-sm">{{ form.non_field_errors }}</div>{% endif %}
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div><label class="block text-sm font-medium mb-1">{% trans "Customer" %}</label>{{ form.customer }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Price List" %}</label>{{ form.price_list }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Order Date" %}</label>{{ form.order_date }}</div>
+      <div class="sm:col-span-3"><label class="block text-sm font-medium mb-1">{% trans "Notes" %}</label>{{ form.notes }}</div>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="font-semibold text-slate-800">{% trans "Line Items" %}</h2>
+        <button type="button" onclick="addFormsetRow('items', 'so-items-body', 'so-empty-row')" class="px-3 py-1.5 bg-slate-800 text-white rounded text-xs font-semibold">{% trans "+ Add Row" %}</button>
+      </div>
+      {{ formset.management_form }}
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600">
+            <tr><th class="px-3 py-2 text-left">{% trans "Variant" %}</th><th class="px-3 py-2 text-left w-24">{% trans "Qty" %}</th><th class="px-3 py-2 text-left w-32">{% trans "Price (Auto)" %}</th><th class="px-3 py-2 text-left w-28">{% trans "Disc %" %}</th></tr>
+          </thead>
+          <tbody id="so-items-body">
+            {% for f in formset %}
+            <tr class="line-item-row border-b border-slate-100">
+              <td class="p-2">{{ f.variant }}</td>
+              <td class="p-2">{{ f.quantity }}</td>
+              <td class="p-2">{{ f.unit_price }}</td>
+              <td class="p-2">{{ f.discount_percent }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <template id="so-empty-row">
+        <td class="p-2">{{ formset.empty_form.variant }}</td>
+        <td class="p-2">{{ formset.empty_form.quantity }}</td>
+        <td class="p-2">{{ formset.empty_form.unit_price }}</td>
+        <td class="p-2">{{ formset.empty_form.discount_percent }}</td>
+      </template>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Save Sales Order" %}</button>
+      <a href="{% url 'sales:order_list' %}" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+<script src="{% static 'js/line_items.js' %}"></script>
+{% endblock %}

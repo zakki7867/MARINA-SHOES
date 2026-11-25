@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ product.name }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <div class="text-xs uppercase tracking-wider text-slate-400">{{ product.brand.name }} &middot; {{ product.category.name }}</div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ product.name }}</h1>
+    <p class="text-sm text-slate-500">{% trans "Code:" %} {{ product.hsn_code|default:"—" }} &middot; {% trans "Tax:" %} {{ product.tax_rate }}% &middot; {% trans "Unit:" %} {{ product.unit }}</p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    <a href="{% url 'inventory:product_list' %}" class="px-3.5 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold">{% trans "All Products" %}</a>
+    {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+    <a href="{% url 'inventory:product_edit' product.pk %}" class="px-3.5 py-2 rounded-lg bg-slate-800 text-white text-sm font-semibold">{% trans "Edit Product" %}</a>
+    <form method="post" action="{% url 'inventory:product_delete' product.pk %}" onsubmit="return confirm('Archive this product and all its variants?');">
+      {% csrf_token %}
+      <button type="submit" class="px-3.5 py-2 rounded-lg bg-rose-50 text-rose-700 border border-rose-200 text-sm font-semibold">{% trans "Archive" %}</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto mb-6">
+  <div class="px-4 py-3 border-b border-slate-200 font-semibold text-slate-800">{% trans "Size & Color Variants" %}</div>
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">SKU</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Size / Color" %}</th>
+        {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+        <th class="px-4 py-3 font-semibold">{% trans "Cost" %}</th>
+        {% endif %}
+        <th class="px-4 py-3 font-semibold">{% trans "Wholesale" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Retail" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Stock" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for v in variants %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-mono text-xs font-semibold">{{ v.sku }}</td>
+        <td class="px-4 py-3">{% trans "Size" %} {{ v.size }} &middot; {{ v.color }}</td>
+        {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+        <td class="px-4 py-3">{{ store_settings.currency_symbol|default:"KD" }} {{ v.cost_price }}</td>
+        {% endif %}
+        <td class="px-4 py-3 font-medium">{{ store_settings.currency_symbol|default:"KD" }} {{ v.wholesale_price }}</td>
+        <td class="px-4 py-3">{{ store_settings.currency_symbol|default:"KD" }} {{ v.retail_price }}</td>
+        <td class="px-4 py-3">
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold {% if v.is_low_stock %}bg-amber-100 text-amber-800{% else %}bg-emerald-100 text-emerald-800{% endif %}">
+            {{ v.current_stock }} ({% trans "Min" %} {{ v.reorder_level }})
+          </span>
+        </td>
+        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+          <a href="{% url 'inventory:variant_history' v.pk %}" class="text-sky-600 hover:underline font-medium">{% trans "History" %}</a>
+          {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+          <a href="{% url 'inventory:stock_movement' %}?variant={{ v.pk }}" class="text-emerald-700 hover:underline">{% trans "Adjust" %}</a>
+          <a href="{% url 'inventory:variant_edit' v.pk %}" class="text-slate-600 hover:underline">{% trans "Edit" %}</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="7" class="px-4 py-6 text-center text-slate-500">{% trans "No variants added yet." %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if user.is_owner or user.is_manager or user.is_storekeeper %}
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h2 class="text-lg font-bold text-slate-900 mb-3">{% trans "Add Size / Color Variant" %}</h2>
+  {% if variant_form.non_field_errors %}
+  <div class="mb-3 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">{{ variant_form.non_field_errors|join:", " }}</div>
+  {% endif %}
+  <form method="post" action="{% url 'inventory:variant_create' product.pk %}" class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+    {% csrf_token %}
+    {% for field in variant_form %}
+    <div>
+      <label class="block text-xs font-semibold text-slate-600 mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+      {{ field }}
+      {% if field.errors %}<p class="text-xs text-rose-600 mt-1">{{ field.errors|join:", " }}</p>{% endif %}
+    </div>
+    {% endfor %}
+    <div class="sm:col-span-4">
+      <button type="submit" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "+ Add Variant" %}</button>
+    </div>
+  </form>
+</div>
+{% endif %}
+{% endblock %}

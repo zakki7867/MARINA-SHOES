@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Sign In" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="min-h-[80vh] flex items-center justify-center">
+  <div class="w-full max-w-md bg-white rounded-2xl shadow-md border border-slate-200 p-6 sm:p-8">
+    <div class="flex justify-end mb-4">
+      {% include "partials/language_switcher.html" with variant="light" %}
+    </div>
+    <div class="text-center mb-6">
+      <h1 class="text-2xl font-bold text-slate-900">{{ store_settings.store_name|default:"MARINA SHOES" }}</h1>
+      <p class="text-sm text-slate-500 mt-1">{% trans "Sign in to access store operations" %}</p>
+    </div>
+
+    {% if form.errors %}
+    <div class="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">
+      {% trans "Invalid username or password. Please try again." %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.username.id_for_label }}">{% trans "Username" %}</label>
+        {{ form.username }}
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ form.password.id_for_label }}">{% trans "Password" %}</label>
+        {{ form.password }}
+      </div>
+      <button type="submit" class="w-full py-3 rounded-lg bg-sky-600 hover:bg-sky-700 text-white font-semibold text-sm transition">
+        {% trans "Sign In" %}
+      </button>
+    </form>
+  </div>
+</div>
+{% endblock %}

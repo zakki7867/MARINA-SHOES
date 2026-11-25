@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{{ order.order_number }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ order.order_number }}</h1>
+    <p class="text-sm text-slate-500">{% trans "Customer:" %} {{ order.customer.name }} &middot; {% trans "Price List:" %} {{ order.get_price_list_display }} &middot; {% trans "Status:" %} <span class="font-semibold">{{ order.get_status_display }}</span></p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    {% if order.invoice %}
+    <a href="{% url 'invoicing:invoice_detail' order.invoice.pk %}" class="px-4 py-2 bg-emerald-600 text-white rounded-lg text-sm font-semibold">{% trans "View Invoice" %} {{ order.invoice }}</a>
+    {% elif order.status != 'CANCELLED' %}
+    <form method="post" action="{% url 'sales:order_to_invoice' order.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Convert & Issue Invoice" %}</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr><th class="px-4 py-3">SKU</th><th class="px-4 py-3">{% trans "Item" %}</th><th class="px-4 py-3 text-right">{% trans "Qty" %}</th><th class="px-4 py-3 text-right">{% trans "Unit Price" %}</th><th class="px-4 py-3 text-right">{% trans "Disc %" %}</th><th class="px-4 py-3 text-right">{% trans "Total" %}</th></tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for it in order.items.all %}
+      <tr>
+        <td class="px-4 py-3 font-mono text-xs">{{ it.variant.sku }}</td>
+        <td class="px-4 py-3">{{ it.variant.product.name }} ({{ it.variant.color }} / {{ it.variant.size }})</td>
+        <td class="px-4 py-3 text-right">{{ it.quantity }}</td>
+        <td class="px-4 py-3 text-right">{{ store_settings.currency_symbol|default:"KD" }} {{ it.unit_price }}</td>
+        <td class="px-4 py-3 text-right">{{ it.discount_percent }}%</td>
+        <td class="px-4 py-3 text-right font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ it.line_total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+    <tfoot class="bg-slate-50 font-bold">
+      <tr><td colspan="5" class="px-4 py-3 text-right">{% trans "Order Total (Pre-Tax)" %}</td><td class="px-4 py-3 text-right">{{ store_settings.currency_symbol|default:"KD" }} {{ order.grand_total }}</td></tr>
+    </tfoot>
+  </table>
+</div>
+{% endblock %}

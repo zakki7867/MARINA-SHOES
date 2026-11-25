@@ -1,0 +1,63 @@
+/* Base utility enhancements for non-technical shop staff UI */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+  width: 100%;
+  border: 1px solid #cbd5e1;
+  border-radius: 0.5rem;
+  padding: 0.6rem 0.75rem;
+  font-size: 0.95rem;
+  background-color: #ffffff;
+  color: #0f172a;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid #0284c7;
+  outline-offset: 1px;
+  border-color: #0284c7;
+}
+
+input[type="checkbox"] {
+  width: 1.15rem;
+  height: 1.15rem;
+  accent-color: #0284c7;
+}
+
+@media print {
+  .no-print {
+    display: none !important;
+  }
+}
+
+/* Arabic RTL layout & typography enhancements */
+[dir="rtl"] body {
+  font-family: "Cairo", "Tajawal", "Segoe UI", Tahoma, Arial, sans-serif;
+}
+
+[dir="rtl"] .text-left {
+  text-align: right;
+}
+
+[dir="rtl"] .text-right {
+  text-align: left;
+}
+
+[dir="rtl"] .font-mono {
+  direction: ltr;
+  unicode-bidi: embed;
+}
+
+[dir="rtl"] nav details > div {
+  padding-left: 0;
+  padding-right: 0.5rem;
+}
+
+[dir="rtl"] nav details:not([open]) .nav-chevron {
+  transform: rotate(180deg);
+}

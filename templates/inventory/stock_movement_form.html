@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Stock Adjustment" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <h1 class="text-xl font-bold text-slate-900 mb-1">{% trans "Record Stock Movement" %}</h1>
+    <p class="text-xs text-slate-500 mb-4">{% trans "Stock is computed exclusively from ledger entries. Negative stock:" %} {% if store_settings.allow_negative_stock %}{% trans "allowed" %}{% else %}{% trans "blocked" %}{% endif %}.</p>
+
+    {% if form.non_field_errors %}
+    <div class="mb-4 p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">{{ form.non_field_errors|join:", " }}</div>
+    {% endif %}
+
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      {% for field in form %}
+      <div>
+        <label class="block text-sm font-medium text-slate-700 mb-1" for="{{ field.id_for_label }}">{{ field.label }}</label>
+        {{ field }}
+        {% if field.help_text %}<p class="text-xs text-slate-500 mt-1">{{ field.help_text }}</p>{% endif %}
+        {% if field.errors %}<p class="text-xs text-rose-600 mt-1">{{ field.errors|join:", " }}</p>{% endif %}
+      </div>
+      {% endfor %}
+      <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Post Stock Movement" %}</button>
+    </form>
+  </div>
+
+  <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+    <div class="px-4 py-3 border-b border-slate-200 font-semibold text-slate-800">{% trans "Recent Stock Movements" %}</div>
+    <table class="w-full text-left text-sm">
+      <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+        <tr>
+          <th class="px-4 py-3 font-semibold">{% trans "Time" %}</th>
+          <th class="px-4 py-3 font-semibold">SKU</th>
+          <th class="px-4 py-3 font-semibold">{% trans "Type" %}</th>
+          <th class="px-4 py-3 font-semibold">{% trans "Delta" %}</th>
+          <th class="px-4 py-3 font-semibold">{% trans "User" %}</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        {% for m in recent_movements %}
+        <tr class="hover:bg-slate-50">
+          <td class="px-4 py-3 whitespace-nowrap text-xs text-slate-500">{{ m.created_at|date:"Y-m-d H:i" }}</td>
+          <td class="px-4 py-3 font-mono text-xs font-semibold">
+            <a href="{% url 'inventory:variant_history' m.variant_id %}" class="text-sky-700 hover:underline">{{ m.variant.sku }}</a>
+          </td>
+          <td class="px-4 py-3">{{ m.get_movement_type_display }}</td>
+          <td class="px-4 py-3 font-bold {% if m.signed_quantity >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">
+            {% if m.signed_quantity > 0 %}+{% endif %}{{ m.signed_quantity }}
+          </td>
+          <td class="px-4 py-3">{{ m.user.username }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="px-4 py-6 text-center text-slate-500">{% trans "No stock movements yet." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "Exchange for" %} {{ invoice.invoice_number }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="max-w-3xl bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h1 class="text-xl font-bold text-slate-900 mb-1">{% trans "Process Product Exchange" %}</h1>
+  <p class="text-sm text-slate-500 mb-4">{% trans "Original Invoice:" %} {{ invoice.invoice_number }} &middot; {% trans "Customer:" %} {{ invoice.customer.name }}</p>
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div>
+        <label class="block text-sm font-medium mb-1">{% trans "Return Condition" %}</label>
+        <select name="condition">
+          {% for val, label in conditions %}
+          <option value="{{ val }}">{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium mb-1">{% trans "Reason" %}</label>
+        <input type="text" name="reason" placeholder="{% trans 'Size exchange, color swap, etc.' %}" />
+      </div>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold text-sm">{% trans "Items Returned" %}</span>
+        <button type="button" onclick="addFormsetRow('ret', 'ex-ret-body', 'ex-ret-empty')" class="px-2.5 py-1 bg-slate-800 text-white rounded text-xs">{% trans "+ Row" %}</button>
+      </div>
+      {{ ret_formset.management_form }}
+      <table class="w-full text-sm border border-slate-200 rounded">
+        <thead class="bg-slate-50"><tr><th class="p-2 text-left">{% trans "Variant" %}</th><th class="p-2 text-left w-28">{% trans "Qty" %}</th></tr></thead>
+        <tbody id="ex-ret-body">
+          {% for f in ret_formset %}
+          <tr class="border-t border-slate-100"><td class="p-2">{{ f.variant }}</td><td class="p-2">{{ f.quantity }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <template id="ex-ret-empty"><td class="p-2">{{ ret_formset.empty_form.variant }}</td><td class="p-2">{{ ret_formset.empty_form.quantity }}</td></template>
+    </div>
+
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold text-sm">{% trans "Replacement Items" %}</span>
+        <button type="button" onclick="addFormsetRow('rep', 'ex-rep-body', 'ex-rep-empty')" class="px-2.5 py-1 bg-slate-800 text-white rounded text-xs">{% trans "+ Row" %}</button>
+      </div>
+      {{ rep_formset.management_form }}
+      <table class="w-full text-sm border border-slate-200 rounded">
+        <thead class="bg-slate-50"><tr><th class="p-2 text-left">{% trans "Variant" %}</th><th class="p-2 text-left w-28">{% trans "Qty" %}</th></tr></thead>
+        <tbody id="ex-rep-body">
+          {% for f in rep_formset %}
+          <tr class="border-t border-slate-100"><td class="p-2">{{ f.variant }}</td><td class="p-2">{{ f.quantity }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      <template id="ex-rep-empty"><td class="p-2">{{ rep_formset.empty_form.variant }}</td><td class="p-2">{{ rep_formset.empty_form.quantity }}</td></template>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit" class="px-5 py-2.5 bg-sky-600 text-white rounded-lg text-sm font-semibold">{% trans "Complete Exchange" %}</button>
+      <a href="{% url 'invoicing:invoice_detail' invoice.pk %}" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+<script src="{% static 'js/line_items.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,87 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8" />
+  <title>{{ invoice }} — {% trans "Print Invoice" %}</title>
+  <style>
+    body { font-family: Arial, Tahoma, sans-serif; color: #111827; margin: 24px; font-size: 13px; }
+    .header { display: flex; justify-content: space-between; border-bottom: 2px solid #111827; padding-bottom: 12px; margin-bottom: 16px; }
+    .addr-grid { display: flex; justify-content: space-between; gap: 24px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; }
+    th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: start; }
+    th { background: #f3f4f6; }
+    .num { text-align: end; direction: ltr; }
+    .totals { width: 320px; margin-inline-start: auto; margin-top: 16px; }
+    .terms { margin-top: 20px; font-size: 11px; color: #4b5563; border-top: 1px solid #e5e7eb; padding-top: 8px; }
+    @media print { .no-print { display: none; } body { margin: 0; } }
+  </style>
+</head>
+<body>
+  <div class="no-print" style="margin-bottom: 16px;">
+    <button onclick="window.print()" style="padding: 8px 16px; background: #0284c7; color: #fff; border: 0; border-radius: 6px; cursor: pointer;">{% trans "Print Invoice" %}</button>
+  </div>
+  <div class="header">
+    <div>
+      <h1 style="margin: 0; font-size: 20px;">{{ store_settings.store_name|default:"MARINA SHOES" }}</h1>
+      <div>{{ store_settings.address }}</div>
+      <div>{% trans "Phone:" %} {{ store_settings.phone }} | {% trans "Region:" %} {{ store_settings.state_code }} {% if store_settings.gstin %}| {% trans "CR / Tax ID:" %} {{ store_settings.gstin }}{% endif %}</div>
+    </div>
+    <div style="text-align: end;">
+      <h2 style="margin: 0;">{% if invoice.total_tax > 0 %}{% trans "TAX INVOICE" %}{% else %}{% trans "INVOICE" %}{% endif %}</h2>
+      <div><strong>{% trans "Invoice #:" %}</strong> {{ invoice }}</div>
+      <div><strong>{% trans "Date:" %}</strong> {{ invoice.invoice_date }} | <strong>{% trans "Due:" %}</strong> {{ invoice.due_date }}</div>
+      <div><strong>{% trans "Pricing:" %}</strong> {{ invoice.get_tax_mode_display }}</div>
+    </div>
+  </div>
+  <div class="addr-grid">
+    <div>
+      <strong>{% trans "Bill To:" %}</strong> {{ invoice.customer.name }}<br />
+      {{ invoice.billing_address|default:invoice.customer.address }} {{ invoice.customer.city }}<br />
+      {% trans "Phone:" %} {{ invoice.customer.phone }} | {% trans "Region:" %} {{ invoice.place_of_supply_state }} {% if invoice.customer.gstin %}| {% trans "CR / Tax ID:" %} {{ invoice.customer.gstin }}{% endif %}
+    </div>
+    {% if invoice.shipping_address %}
+    <div style="text-align: end;">
+      <strong>{% trans "Ship To:" %}</strong><br />
+      {{ invoice.shipping_address }}
+    </div>
+    {% endif %}
+  </div>
+  <table>
+    <thead>
+      <tr><th>{% trans "Item" %}</th><th>{% trans "Code" %}</th><th class="num">{% trans "Qty" %}</th><th class="num">{% trans "Rate" %}</th><th class="num">{% trans "Disc" %}</th><th class="num">{% trans "Net" %}</th>{% if invoice.total_tax > 0 %}<th class="num">{% trans "Tax" %}</th>{% endif %}<th class="num">{% trans "Total" %}</th></tr>
+    </thead>
+    <tbody>
+      {% for it in invoice.items.all %}
+      <tr>
+        <td>{{ it.description }}</td>
+        <td>{{ it.hsn_code }}</td>
+        <td class="num">{{ it.quantity }}</td>
+        <td class="num">{{ it.unit_price }}</td>
+        <td class="num">{{ it.discount_amount }}</td>
+        <td class="num">{{ it.taxable_value }}</td>
+        {% if invoice.total_tax > 0 %}<td class="num">{% if it.igst_amount > 0 %}{{ it.igst_amount }}{% else %}{{ it.cgst_amount|add:it.sgst_amount }}{% endif %}</td>{% endif %}
+        <td class="num">{{ it.line_total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="totals">
+    <tr><td>{% trans "Subtotal (Net)" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.taxable_amount }}</td></tr>
+    {% if invoice.total_tax > 0 %}
+    <tr><td>{% trans "Tax" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.total_tax }}</td></tr>
+    {% endif %}
+    {% if invoice.invoice_discount > 0 %}
+    <tr><td>{% trans "Invoice Discount" %}</td><td class="num">-{{ store_settings.currency_symbol }} {{ invoice.invoice_discount }}</td></tr>
+    {% endif %}
+    <tr><th>{% trans "Grand Total" %}</th><th class="num">{{ store_settings.currency_symbol }} {{ invoice.grand_total }}</th></tr>
+    <tr><td>{% trans "Amount Paid" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.amount_paid }}</td></tr>
+    <tr><th>{% trans "Balance Due" %}</th><th class="num">{{ store_settings.currency_symbol }} {{ invoice.balance_due }}</th></tr>
+  </table>
+  {% if invoice.terms_and_conditions %}
+  <div class="terms"><strong>{% trans "Terms & Conditions:" %}</strong> {{ invoice.terms_and_conditions }}</div>
+  {% endif %}
+</body>
+</html>

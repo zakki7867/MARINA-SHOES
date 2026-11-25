@@ -1,0 +1,288 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Dashboard" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Welcome," %} {% if user.is_owner %}{{ store_settings.store_name|default:"MARINA SHOES"|title }}{% else %}{{ user.get_full_name|default:user.username }}{% endif %}</h1>
+    <p class="text-sm text-slate-500">{{ store_settings.store_name|default:"MARINA SHOES" }} &middot; {% trans "Role:" %} <span class="font-semibold text-slate-700">{{ user.get_role_display }}</span></p>
+  </div>
+  <div class="flex flex-wrap gap-2">
+    {% if user.is_owner or user.is_manager or user.is_billing_staff %}
+    <a href="{% url 'sales:pos' %}" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-sm font-semibold">{% trans "Open POS" %}</a>
+    <a href="{% url 'invoicing:invoice_create' %}" class="px-4 py-2 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "+ New Invoice" %}</a>
+    <a href="{% url 'payments:payment_list' %}" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-semibold">{% trans "+ Receive Payment" %}</a>
+    {% endif %}
+    {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+    <a href="{% url 'purchases:grn_create' %}" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-white rounded-lg text-sm font-semibold">{% trans "Receive Goods" %}</a>
+    {% endif %}
+  </div>
+</div>
+
+<!-- Row 1: Revenue vs Collections & Expenses -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Today's Sales (Billed)" %}</div>
+    <div class="mt-2 text-2xl font-bold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ todays_sales }}</div>
+    <div class="text-xs mt-1 flex flex-wrap items-center gap-x-2">
+      <span class="text-slate-500">{% trans "Yesterday:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ yesterday_sales }}</span>
+      {% if sales_vs_yesterday_pct is not None %}
+      <span class="font-semibold {% if sales_vs_yesterday_pct >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">
+        ({% if sales_vs_yesterday_pct >= 0 %}+{% endif %}{{ sales_vs_yesterday_pct }}%)
+      </span>
+      {% endif %}
+    </div>
+    <div class="text-xs text-slate-500 mt-0.5">
+      {% trans "This Month:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ monthly_sales_total }}
+      {% if sales_vs_last_month_pct is not None %}
+      <span class="font-semibold {% if sales_vs_last_month_pct >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">
+        ({% if sales_vs_last_month_pct >= 0 %}+{% endif %}{{ sales_vs_last_month_pct }}% {% trans "vs last mo" %})
+      </span>
+      {% else %}
+      <span class="text-slate-400">({% trans "Last mo:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ last_month_sales_total }})</span>
+      {% endif %}
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Today's Collections" %}</div>
+    <div class="mt-2 text-2xl font-bold text-emerald-700">{{ store_settings.currency_symbol|default:"KD" }} {{ todays_collections }}</div>
+    <div class="text-xs text-slate-500 mt-1">{% trans "Total KNET Collected:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ knet_collections }}</div>
+  </div>
+  {% if can_view_finance %}
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Expenses (Today / Month)" %}</div>
+    <div class="mt-2 text-2xl font-bold text-rose-700">{{ store_settings.currency_symbol|default:"KD" }} {{ todays_expenses }}</div>
+    <div class="text-xs text-slate-500 mt-1">{% trans "This Month:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ monthly_expenses }}</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Gross Profit Estimate" %}</div>
+    <div class="mt-2 text-2xl font-bold text-sky-700">{{ store_settings.currency_symbol|default:"KD" }} {{ gross_profit_estimate }}</div>
+    <div class="text-xs text-slate-600 mt-1 font-medium">
+      {% trans "Today's Profit:" %} <span class="{% if todays_net_profit >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %} font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ todays_net_profit }}</span>
+      <span class="text-slate-400">({% trans "Gross:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ todays_gross_profit }})</span>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Row 2: Stock, Cash/Bank, Receivables & Payables -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Inventory" %} ({{ inventory_qty }} {% trans "Pairs" %})</div>
+    {% if can_view_stock_value %}
+    <div class="mt-2 text-2xl font-bold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ stock_value }}</div>
+    {% else %}
+    <div class="mt-2 text-2xl font-bold text-slate-900">{{ inventory_qty }} {% trans "Pairs" %}</div>
+    {% endif %}
+    <div class="text-xs mt-1 flex flex-wrap gap-2">
+      <a href="{% url 'inventory:low_stock' %}" class="text-amber-700 font-semibold hover:underline">{{ low_stock_count }} {% trans "low-stock" %}</a>
+      <span class="text-slate-300">&middot;</span>
+      <span class="text-rose-700 font-semibold">{{ out_of_stock_count }} {% trans "out-of-stock" %}</span>
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Customer Receivables" %}</div>
+    <div class="mt-2 text-2xl font-bold text-rose-700">{{ store_settings.currency_symbol|default:"KD" }} {{ pending_receivables }}</div>
+    <div class="text-xs text-slate-500 mt-1">{{ overdue_count }} {% trans "overdue invoice(s)" %}</div>
+  </div>
+  {% if can_view_finance %}
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Supplier Payables" %}</div>
+    <div class="mt-2 text-2xl font-bold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ supplier_payables }}</div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm">
+    <div class="text-xs font-semibold uppercase text-slate-400">{% trans "Actual Cash & Bank" %}</div>
+    <div class="mt-2 text-sm font-bold text-slate-900">{% trans "Cash:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ cash_balance }}</div>
+    <div class="text-sm font-bold text-slate-700">{% trans "Bank/KNET:" %} {{ store_settings.currency_symbol|default:"KD" }} {{ bank_balance }}</div>
+  </div>
+  {% endif %}
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 p-6 shadow-sm">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="font-bold text-slate-800">{% trans "Monthly Sales Chart" %}</h2>
+      {% if user.is_owner or user.is_manager %}
+      <a href="{% url 'reports:index' %}" class="text-xs font-semibold text-sky-600 hover:underline">{% trans "All Reports" %} &rarr;</a>
+      {% endif %}
+    </div>
+    {% if chart_bars %}
+    <div class="grid grid-cols-2 sm:grid-cols-6 gap-4 items-end h-48 pt-4 border-b border-slate-200">
+      {% for bar in chart_bars %}
+      <div class="flex flex-col items-center h-full justify-end">
+        <div class="text-xs font-semibold text-slate-700 mb-1">{{ store_settings.currency_symbol|default:"KD" }} {{ bar.total }}</div>
+        <div class="w-10 sm:w-12 bg-sky-600 rounded-t-md" style="height: {{ bar.pct }}%;"></div>
+        <div class="text-xs text-slate-500 mt-2">{{ bar.label }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-sm text-slate-500 py-8 text-center">{% trans "No invoiced sales recorded yet." %}</p>
+    {% endif %}
+  </div>
+
+  <div class="space-y-4">
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+      <h2 class="font-bold text-slate-800 mb-3">{% trans "Top-Selling Products" %}</h2>
+      <ul class="divide-y divide-slate-100 text-sm">
+        {% for tp in top_products %}
+        <li class="py-2 flex justify-between">
+          <span class="truncate pr-2">{{ tp.variant__product__name }} <span class="text-xs text-slate-400">({{ tp.variant__sku }})</span></span>
+          <span class="font-semibold shrink-0">{{ tp.units }} {% trans "pairs" %}</span>
+        </li>
+        {% empty %}
+        <li class="py-4 text-slate-400">{% trans "No sales yet." %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+      <h2 class="font-bold text-slate-800 mb-3">{% trans "Recent Invoices" %}</h2>
+      <ul class="divide-y divide-slate-100 text-sm">
+        {% for inv in recent_invoices %}
+        <li class="py-2 flex justify-between">
+          <a href="{% url 'invoicing:invoice_detail' inv.pk %}" class="text-sky-700 hover:underline font-mono text-xs">{{ inv.invoice_number }}</a>
+          <span class="font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ inv.grand_total }}</span>
+        </li>
+        {% empty %}
+        <li class="py-4 text-slate-400">{% trans "No invoices yet." %}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- Row 4: Operational Action Lists -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800">{% trans "Low-Stock & Out-of-Stock Alerts" %}</h2>
+      <a href="{% url 'inventory:low_stock' %}" class="text-xs font-semibold text-sky-600 hover:underline">{% trans "View All" %} &rarr;</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-400 border-b border-slate-200">
+          <tr>
+            <th class="py-2 text-left">{% trans "SKU / Product" %}</th>
+            <th class="py-2 text-right">{% trans "Stock" %}</th>
+            <th class="py-2 text-right">{% trans "Reorder" %}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for v in low_stock_items %}
+          <tr>
+            <td class="py-2 pr-2">
+              <div class="font-medium text-slate-800">{{ v.product.name }}</div>
+              <div class="text-xs text-slate-400 font-mono">{{ v.sku }} &middot; {{ v.color }} / {{ v.size }}</div>
+            </td>
+            <td class="py-2 text-right font-semibold {% if v.calculated_stock <= 0 %}text-rose-700{% else %}text-amber-700{% endif %}">
+              {{ v.calculated_stock }}
+            </td>
+            <td class="py-2 text-right text-slate-500">{{ v.reorder_level }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="py-4 text-slate-400 text-center">{% trans "All tracked SKUs are above reorder level." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  {% if can_view_receivables %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800">{% trans "Pending Customer Payments" %}</h2>
+      <a href="{% url 'payments:overdue_list' %}" class="text-xs font-semibold text-sky-600 hover:underline">{% trans "Receivables" %} &rarr;</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-400 border-b border-slate-200">
+          <tr>
+            <th class="py-2 text-left">{% trans "Invoice / Customer" %}</th>
+            <th class="py-2 text-left">{% trans "Due Date" %}</th>
+            <th class="py-2 text-right">{% trans "Balance Due" %}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for inv in pending_customer_invoices %}
+          <tr>
+            <td class="py-2 pr-2">
+              <a href="{% url 'invoicing:invoice_detail' inv.pk %}" class="font-mono text-xs text-sky-700 hover:underline font-semibold">{{ inv.invoice_number }}</a>
+              <div class="text-xs text-slate-600 truncate max-w-[180px]">{{ inv.customer.name }}</div>
+            </td>
+            <td class="py-2 text-xs">
+              {% if inv.due_date %}
+              <span class="{% if inv.is_overdue_flag %}text-rose-700 font-semibold{% else %}text-slate-500{% endif %}">
+                {{ inv.due_date|date:"Y-m-d" }}{% if inv.is_overdue_flag %} ({% trans "Overdue" %}){% endif %}
+              </span>
+              {% else %}
+              <span class="text-slate-400">—</span>
+              {% endif %}
+            </td>
+            <td class="py-2 text-right font-semibold text-rose-700">{{ store_settings.currency_symbol|default:"KD" }} {{ inv.balance_due }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="py-4 text-slate-400 text-center">{% trans "No pending customer receivables." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+
+  {% if can_view_stock_value %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800">{% trans "Stock Value by Category" %}</h2>
+      <a href="{% url 'inventory:product_list' %}" class="text-xs font-semibold text-sky-600 hover:underline">{% trans "Inventory" %} &rarr;</a>
+    </div>
+    <div class="space-y-3">
+      {% for cat in stock_by_category %}
+      <div>
+        <div class="flex justify-between text-sm mb-1">
+          <span class="font-medium text-slate-700">{{ cat.category }} <span class="text-xs text-slate-400">({{ cat.units }} {% trans "pairs" %})</span></span>
+          <span class="font-semibold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ cat.value }}</span>
+        </div>
+        <div class="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
+          <div class="h-full bg-sky-600 rounded-full" style="width: {{ cat.pct }}%;"></div>
+        </div>
+      </div>
+      {% empty %}
+      <p class="text-sm text-slate-400 py-4 text-center">{% trans "No valued stock on hand yet." %}</p>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  {% if can_view_finance %}
+  <div class="bg-white rounded-xl border border-slate-200 p-5 shadow-sm">
+    <div class="flex items-center justify-between mb-3">
+      <h2 class="font-bold text-slate-800">{% trans "Upcoming Supplier Payments" %}</h2>
+      <a href="{% url 'purchases:supplier_payments' %}" class="text-xs font-semibold text-sky-600 hover:underline">{% trans "Pay Suppliers" %} &rarr;</a>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-sm">
+        <thead class="text-xs uppercase text-slate-400 border-b border-slate-200">
+          <tr>
+            <th class="py-2 text-left">{% trans "Supplier" %}</th>
+            <th class="py-2 text-left">{% trans "Terms" %}</th>
+            <th class="py-2 text-right">{% trans "Balance Due" %}</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          {% for sup in upcoming_suppliers %}
+          <tr>
+            <td class="py-2 pr-2 font-medium text-slate-800">{{ sup.name }}</td>
+            <td class="py-2 text-xs text-slate-500">{{ sup.payment_terms_days }} {% trans "days" %}</td>
+            <td class="py-2 text-right font-semibold text-slate-900">{{ store_settings.currency_symbol|default:"KD" }} {{ sup.outstanding_balance }}</td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="3" class="py-4 text-slate-400 text-center">{% trans "No pending supplier balances." %}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

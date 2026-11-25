@@ -1,0 +1,37 @@
+{% load i18n %}
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "Product" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Brand / Category" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Item Code / Tax" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Variants" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Actions" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for p in products %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3">
+          <a href="{% url 'inventory:product_detail' p.pk %}" class="font-semibold text-sky-700 hover:underline">{{ p.name }}</a>
+          {% if p.style_code %}<div class="text-xs text-slate-400">{% trans "Style:" %} {{ p.style_code }}</div>{% endif %}
+        </td>
+        <td class="px-4 py-3">{{ p.brand.name }} &middot; {{ p.category.name }}</td>
+        <td class="px-4 py-3">{{ p.hsn_code|default:"—" }} ({{ p.tax_rate }}%)</td>
+        <td class="px-4 py-3">{{ p.variant_count }}</td>
+        <td class="px-4 py-3 text-right space-x-2 whitespace-nowrap">
+          <a href="{% url 'inventory:product_detail' p.pk %}" class="text-sky-600 hover:underline font-medium">{% trans "View Variants" %}</a>
+          {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+          <a href="{% url 'inventory:product_edit' p.pk %}" class="text-slate-600 hover:underline">{% trans "Edit" %}</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="px-4 py-8 text-center text-slate-500">{% trans "No products found." %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>

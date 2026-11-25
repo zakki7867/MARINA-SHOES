@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Import & Export Catalog" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <h1 class="text-xl font-bold text-slate-900 mb-2">{% trans "Import Products & Variants" %}</h1>
+    <p class="text-xs text-slate-500 mb-4">{% trans "Columns supported:" %} <code>Product, Brand, Category, Gender, ItemCode, Tax%, Size, Color, SKU, Barcode, Cost, Wholesale, Retail, Reorder Level, Opening Stock</code>.</p>
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Upload & Import" %}</button>
+    </form>
+  </div>
+
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <h2 class="text-xl font-bold text-slate-900 mb-2">{% trans "Export Catalog & Stock" %}</h2>
+    <p class="text-sm text-slate-500 mb-4">{% trans "Download all active product variants with current stock and pricing." %}</p>
+    <div class="flex flex-wrap gap-3">
+      <a href="?export=csv" class="px-4 py-2.5 bg-slate-900 text-white rounded-lg text-sm font-semibold">{% trans "Download CSV" %}</a>
+      <a href="?export=xlsx" class="px-4 py-2.5 bg-emerald-600 text-white rounded-lg text-sm font-semibold">{% trans "Download Excel (.xlsx)" %}</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Low-Stock Alerts" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="mb-5 flex items-center justify-between">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Low-Stock Alerts" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Variants at or below their reorder level" %}</p>
+  </div>
+  <a href="{% url 'inventory:product_list' %}" class="px-4 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold">{% trans "All Products" %}</a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">SKU</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Product" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Size / Color" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Current Stock" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Reorder Level" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for v in variants %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-mono text-xs font-semibold">
+          <a href="{% url 'inventory:variant_history' v.pk %}" class="text-sky-700 hover:underline">{{ v.sku }}</a>
+        </td>
+        <td class="px-4 py-3">{{ v.product.brand.name }} {{ v.product.name }}</td>
+        <td class="px-4 py-3">{% trans "Size" %} {{ v.size }} &middot; {{ v.color }}</td>
+        <td class="px-4 py-3 font-bold text-rose-600">{{ v.current_stock }}</td>
+        <td class="px-4 py-3">{{ v.reorder_level }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="px-4 py-8 text-center text-emerald-700 font-medium">{% trans "All variants are above reorder levels." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

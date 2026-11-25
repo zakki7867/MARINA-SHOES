@@ -1,0 +1,70 @@
+{% load i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8" />
+  <style>
+    @page { size: A4; margin: 14mm; }
+    body { font-family: Tahoma, sans-serif; font-size: 11px; color: #111827; }
+    .header { display: flex; justify-content: space-between; border-bottom: 2px solid #0f172a; padding-bottom: 10px; margin-bottom: 12px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #cbd5e1; padding: 5px 6px; text-align: start; }
+    th { background: #f1f5f9; }
+    .num { text-align: end; direction: ltr; }
+    .totals { width: 280px; margin-inline-start: auto; margin-top: 14px; }
+    .terms { margin-top: 18px; font-size: 10px; color: #475569; border-top: 1px solid #e2e8f0; padding-top: 6px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div>
+      <h1 style="margin: 0; font-size: 18px;">{{ store_settings.store_name|default:"MARINA SHOES" }}</h1>
+      <div>{{ store_settings.address }}</div>
+      <div>{% trans "Phone:" %} {{ store_settings.phone }} | {% trans "Region:" %} {{ store_settings.state_code }} {% if store_settings.gstin %}| {% trans "CR / Tax ID:" %} {{ store_settings.gstin }}{% endif %}</div>
+    </div>
+    <div style="text-align: end;">
+      <h2 style="margin: 0;">{% if invoice.total_tax > 0 %}{% trans "TAX INVOICE" %}{% else %}{% trans "INVOICE" %}{% endif %}</h2>
+      <div><strong>{{ invoice }}</strong></div>
+      <div>{% trans "Date:" %} {{ invoice.invoice_date }} | {% trans "Due:" %} {{ invoice.due_date }}</div>
+    </div>
+  </div>
+  <div>
+    <strong>{% trans "Bill To:" %}</strong> {{ invoice.customer.name }} ({{ invoice.customer.phone }})<br />
+    {{ invoice.billing_address|default:invoice.customer.address }} | {% trans "Region:" %} {{ invoice.place_of_supply_state }} {% if invoice.customer.gstin %}| {% trans "CR / Tax ID:" %} {{ invoice.customer.gstin }}{% endif %}
+    {% if invoice.shipping_address %}<br /><strong>{% trans "Ship To:" %}</strong> {{ invoice.shipping_address }}{% endif %}
+  </div>
+  <table>
+    <thead>
+      <tr><th>{% trans "Item" %}</th><th>{% trans "Code" %}</th><th class="num">{% trans "Qty" %}</th><th class="num">{% trans "Rate" %}</th><th class="num">{% trans "Disc" %}</th><th class="num">{% trans "Net" %}</th>{% if invoice.total_tax > 0 %}<th class="num">{% trans "Tax" %}</th>{% endif %}<th class="num">{% trans "Total" %}</th></tr>
+    </thead>
+    <tbody>
+      {% for it in invoice.items.all %}
+      <tr>
+        <td>{{ it.description }}</td>
+        <td>{{ it.hsn_code }}</td>
+        <td class="num">{{ it.quantity }}</td>
+        <td class="num">{{ it.unit_price }}</td>
+        <td class="num">{{ it.discount_amount }}</td>
+        <td class="num">{{ it.taxable_value }}</td>
+        {% if invoice.total_tax > 0 %}<td class="num">{% if it.igst_amount > 0 %}{{ it.igst_amount }}{% else %}{{ it.cgst_amount|add:it.sgst_amount }}{% endif %}</td>{% endif %}
+        <td class="num">{{ it.line_total }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <table class="totals">
+    <tr><td>{% trans "Subtotal (Net)" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.taxable_amount }}</td></tr>
+    {% if invoice.total_tax > 0 %}
+    <tr><td>{% trans "Tax" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.total_tax }}</td></tr>
+    {% endif %}
+    <tr><th>{% trans "Grand Total" %}</th><th class="num">{{ store_settings.currency_symbol }} {{ invoice.grand_total }}</th></tr>
+    <tr><td>{% trans "Paid" %}</td><td class="num">{{ store_settings.currency_symbol }} {{ invoice.amount_paid }}</td></tr>
+    <tr><th>{% trans "Balance Due" %}</th><th class="num">{{ store_settings.currency_symbol }} {{ invoice.balance_due }}</th></tr>
+  </table>
+  {% if invoice.terms_and_conditions %}
+  <div class="terms"><strong>{% trans "Terms & Conditions:" %}</strong> {{ invoice.terms_and_conditions }}</div>
+  {% endif %}
+</body>
+</html>

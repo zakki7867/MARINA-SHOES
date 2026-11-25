@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "New Invoice" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="max-w-5xl bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+  <h1 class="text-xl font-bold text-slate-900 mb-4">{% trans "Create Invoice" %}</h1>
+  <form method="post" class="space-y-5">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+    <div class="p-3 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 text-sm">{{ form.non_field_errors|join:", " }}</div>
+    {% endif %}
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div><label class="block text-sm font-medium mb-1">{% trans "Customer" %}</label>{{ form.customer }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Location" %}</label>{{ form.location }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Price List" %}</label>{{ form.price_list }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Tax Mode" %}</label>{{ form.tax_mode }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Region / Governorate" %}</label>{{ form.place_of_supply_state }}<p class="text-xs text-slate-400 mt-0.5">{{ form.place_of_supply_state.help_text }}</p></div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Invoice Date" %}</label>{{ form.invoice_date }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Due Date (Optional)" %}</label>{{ form.due_date }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Invoice Discount" %}</label>{{ form.invoice_discount }}</div>
+      <div class="flex items-center gap-2 pt-6">{{ form.issue_now }} <label class="text-sm font-medium" for="{{ form.issue_now.id_for_label }}">{{ form.issue_now.label }}</label></div>
+      <div class="sm:col-span-3"><label class="block text-sm font-medium mb-1">{% trans "Notes" %}</label>{{ form.notes }}</div>
+    </div>
+
+    {% if user.is_owner or user.is_manager %}
+    <div class="flex items-center gap-2 text-sm text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+      <input type="checkbox" name="override_credit_limit" id="id_override_credit" />
+      <label for="id_override_credit">{% trans "Manager/Owner override: allow issuing even if customer credit limit is exceeded" %}</label>
+    </div>
+    {% endif %}
+
+    <div>
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="font-semibold text-slate-800">{% trans "Invoice Line Items" %}</h2>
+        <button type="button" onclick="addFormsetRow('items', 'inv-items-body', 'inv-empty-row')" class="px-3 py-1.5 bg-slate-800 text-white rounded text-xs font-semibold">{% trans "+ Add Row" %}</button>
+      </div>
+      {{ formset.management_form }}
+      <div class="overflow-x-auto border border-slate-200 rounded-lg">
+        <table class="w-full text-sm">
+          <thead class="bg-slate-50 text-slate-600">
+            <tr><th class="px-3 py-2 text-left">{% trans "Variant" %}</th><th class="px-3 py-2 text-left w-24">{% trans "Qty" %}</th><th class="px-3 py-2 text-left w-32">{% trans "Price (Auto)" %}</th><th class="px-3 py-2 text-left w-28">{% trans "Disc %" %}</th></tr>
+          </thead>
+          <tbody id="inv-items-body">
+            {% for f in formset %}
+            <tr class="line-item-row border-b border-slate-100">
+              <td class="p-2">{{ f.variant }}</td>
+              <td class="p-2">{{ f.quantity }}</td>
+              <td class="p-2">{{ f.unit_price }}</td>
+              <td class="p-2">{{ f.discount_percent }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <template id="inv-empty-row">
+        <td class="p-2">{{ formset.empty_form.variant }}</td>
+        <td class="p-2">{{ formset.empty_form.quantity }}</td>
+        <td class="p-2">{{ formset.empty_form.unit_price }}</td>
+        <td class="p-2">{{ formset.empty_form.discount_percent }}</td>
+      </template>
+    </div>
+
+    <div class="flex gap-3">
+      <button type="submit" class="px-5 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Create Invoice" %}</button>
+      <a href="{% url 'invoicing:invoice_list' %}" class="px-5 py-2.5 bg-slate-100 text-slate-700 rounded-lg text-sm font-semibold">{% trans "Cancel" %}</a>
+    </div>
+  </form>
+</div>
+<script src="{% static 'js/line_items.js' %}"></script>
+{% endblock %}

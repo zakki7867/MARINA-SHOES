@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Finance Overview" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Finance: P&L, Tax & Books" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Daily/monthly summaries, Profit & Loss, and tax summary" %}</p>
+  </div>
+  <form method="get" class="flex flex-wrap gap-2 items-center">
+    <input type="date" name="start_date" value="{{ start_date }}" class="w-auto text-sm" />
+    <input type="date" name="end_date" value="{{ end_date }}" class="w-auto text-sm" />
+    <button type="submit" class="px-4 py-2 bg-slate-900 text-white rounded-lg text-sm font-semibold">{% trans "Apply" %}</button>
+  </form>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-xs uppercase text-slate-400 font-semibold">{% trans "Cash Book Balance" %}</div>
+    <div class="text-2xl font-bold mt-1">{{ store_settings.currency_symbol|default:"KD" }} {{ cash_book.closing_balance }}</div>
+    <a href="{% url 'finance:cash_book' %}" class="text-xs text-sky-600 hover:underline">{% trans "Open Cash Book" %} &rarr;</a>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-xs uppercase text-slate-400 font-semibold">{% trans "Bank / KNET / Cheque Balance" %}</div>
+    <div class="text-2xl font-bold mt-1">{{ store_settings.currency_symbol|default:"KD" }} {{ bank_book.closing_balance }}</div>
+    <a href="{% url 'finance:bank_book' %}" class="text-xs text-sky-600 hover:underline">{% trans "Open Bank Book" %} &rarr;</a>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-xs uppercase text-slate-400 font-semibold">{% trans "Net Profit" %}</div>
+    <div class="text-2xl font-bold mt-1 {% if pnl.net_profit >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">
+      {{ store_settings.currency_symbol|default:"KD" }} {{ pnl.net_profit }}
+    </div>
+  </div>
+  <div class="bg-white rounded-xl border border-slate-200 p-4">
+    <div class="text-xs uppercase text-slate-400 font-semibold">{% trans "Net Tax Liability" %}</div>
+    <div class="text-2xl font-bold mt-1">{{ store_settings.currency_symbol|default:"KD" }} {{ gst.net_total_gst }}</div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h2 class="font-bold text-slate-800 mb-3">{% trans "Profit & Loss Statement" %}</h2>
+    <dl class="space-y-2 text-sm">
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Gross Sales (Ex-Tax)" %}</dt><dd>{{ pnl.gross_sales_taxable }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Less: Credit Notes (Ex-Tax)" %}</dt><dd>-{{ pnl.returns_taxable }}</dd></div>
+      <div class="flex justify-between font-semibold border-t pt-1"><dt>{% trans "Net Revenue" %}</dt><dd>{{ pnl.net_revenue }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Less: Cost of Goods Sold (COGS)" %}</dt><dd>-{{ pnl.cogs }}</dd></div>
+      <div class="flex justify-between font-semibold border-t pt-1"><dt>{% trans "Gross Profit" %}</dt><dd>{{ pnl.gross_profit }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Less: Operating Expenses" %}</dt><dd>-{{ pnl.total_expenses }}</dd></div>
+      <div class="flex justify-between font-bold text-base border-t pt-2"><dt>{% trans "Net Profit" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ pnl.net_profit }}</dd></div>
+    </dl>
+  </div>
+
+  <div class="bg-white rounded-xl border border-slate-200 p-5">
+    <h2 class="font-bold text-slate-800 mb-3">{% trans "Tax Summary" %}</h2>
+    <dl class="space-y-2 text-sm">
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Outward Taxable" %}</dt><dd>{{ gst.outward_taxable }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Less Credit Notes Taxable" %}</dt><dd>-{{ gst.credit_note_taxable }}</dd></div>
+      <div class="flex justify-between font-semibold border-t pt-1"><dt>{% trans "Net Taxable Value" %}</dt><dd>{{ gst.net_taxable }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Net Tax (Local Part 1)" %}</dt><dd>{{ gst.net_cgst }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Net Tax (Local Part 2)" %}</dt><dd>{{ gst.net_sgst }}</dd></div>
+      <div class="flex justify-between"><dt class="text-slate-500">{% trans "Net Regional Tax" %}</dt><dd>{{ gst.net_igst }}</dd></div>
+      <div class="flex justify-between font-bold text-base border-t pt-2"><dt>{% trans "Net Tax Total" %}</dt><dd>{{ store_settings.currency_symbol|default:"KD" }} {{ gst.net_total_gst }}</dd></div>
+    </dl>
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 p-5">
+  <h2 class="font-bold text-slate-800 mb-3">{% trans "Today's Summary" %} ({{ summary.target_date }})</h2>
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+    <div><span class="text-slate-500 block">{% trans "Sales Invoiced" %}</span><span class="font-bold">{{ store_settings.currency_symbol|default:"KD" }} {{ summary.daily_sales }}</span></div>
+    <div><span class="text-slate-500 block">{% trans "Collections" %}</span><span class="font-bold text-emerald-700">{{ store_settings.currency_symbol|default:"KD" }} {{ summary.daily_collections }}</span></div>
+    <div><span class="text-slate-500 block">{% trans "Purchases" %}</span><span class="font-bold">{{ store_settings.currency_symbol|default:"KD" }} {{ summary.daily_purchases }}</span></div>
+    <div><span class="text-slate-500 block">{% trans "Expenses" %}</span><span class="font-bold text-rose-700">{{ store_settings.currency_symbol|default:"KD" }} {{ summary.daily_expenses }}</span></div>
+  </div>
+</div>
+{% endblock %}

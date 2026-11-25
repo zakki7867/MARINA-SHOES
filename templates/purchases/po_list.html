@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Purchase Orders" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Purchase Orders" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Order footwear stock from suppliers" %}</p>
+  </div>
+  <a href="{% url 'purchases:po_create' %}" class="px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "+ New Purchase Order" %}</a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "PO #" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Supplier" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Order Date" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Status" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Total" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Action" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for o in orders %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-mono text-xs font-semibold"><a href="{% url 'purchases:po_detail' o.pk %}" class="text-sky-700 hover:underline">{{ o.po_number }}</a></td>
+        <td class="px-4 py-3">{{ o.supplier.name }}</td>
+        <td class="px-4 py-3">{{ o.order_date }}</td>
+        <td class="px-4 py-3"><span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100">{{ o.get_status_display }}</span></td>
+        <td class="px-4 py-3 text-right font-semibold">{{ store_settings.currency_symbol|default:"KD" }} {{ o.total_amount }}</td>
+        <td class="px-4 py-3 text-right space-x-2">
+          <a href="{% url 'purchases:po_detail' o.pk %}" class="text-sky-600 hover:underline">{% trans "View" %}</a>
+          {% if o.status != 'RECEIVED' and o.status != 'CANCELLED' %}
+          <a href="{% url 'purchases:po_receive' o.pk %}" class="text-emerald-700 font-semibold hover:underline">{% trans "Receive" %}</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="px-4 py-8 text-center text-slate-500">{% trans "No purchase orders created yet." %}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

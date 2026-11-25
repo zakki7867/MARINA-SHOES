@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% load static i18n %}
+{% block title %}{% trans "Physical Stock Counts" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-6">
+    <h1 class="text-xl font-bold text-slate-900 mb-2">{% trans "Record Physical Stock Count" %}</h1>
+    <p class="text-xs text-slate-500 mb-4">{% trans "Any difference between system stock and physical count automatically posts a correcting adjustment movement." %}</p>
+    <form method="post" class="space-y-4">
+      {% csrf_token %}
+      <div><label class="block text-sm font-medium mb-1">{% trans "Location" %}</label>{{ form.location }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Count Date" %}</label>{{ form.count_date }}</div>
+      <div><label class="block text-sm font-medium mb-1">{% trans "Notes" %}</label>{{ form.notes }}</div>
+
+      <div>
+        <div class="flex items-center justify-between mb-2">
+          <span class="font-semibold text-sm">{% trans "Counted Variants" %}</span>
+          <button type="button" onclick="addFormsetRow('items', 'cnt-items-body', 'cnt-empty-row')" class="px-2.5 py-1 bg-slate-800 text-white rounded text-xs">{% trans "+ Row" %}</button>
+        </div>
+        {{ formset.management_form }}
+        <table class="w-full text-sm border border-slate-200 rounded">
+          <thead class="bg-slate-50"><tr><th class="p-2 text-left">{% trans "Variant" %}</th><th class="p-2 text-left w-24">{% trans "Counted" %}</th></tr></thead>
+          <tbody id="cnt-items-body">
+            {% for f in formset %}
+            <tr class="border-t border-slate-100"><td class="p-2">{{ f.variant }}</td><td class="p-2">{{ f.counted_quantity }}</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <template id="cnt-empty-row"><td class="p-2">{{ formset.empty_form.variant }}</td><td class="p-2">{{ formset.empty_form.counted_quantity }}</td></template>
+      </div>
+      <button type="submit" class="w-full py-2.5 bg-sky-600 hover:bg-sky-700 text-white rounded-lg text-sm font-semibold">{% trans "Post Stock Count" %}</button>
+    </form>
+  </div>
+
+  <div class="lg:col-span-2 bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+    <div class="px-4 py-3 border-b border-slate-200 font-semibold">{% trans "Recent Physical Counts" %}</div>
+    <table class="w-full text-left text-sm">
+      <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+        <tr><th class="px-4 py-3">{% trans "Count #" %}</th><th class="px-4 py-3">{% trans "Date" %}</th><th class="px-4 py-3">{% trans "Location" %}</th><th class="px-4 py-3">{% trans "Variances" %}</th><th class="px-4 py-3">{% trans "By" %}</th></tr>
+      </thead>
+      <tbody class="divide-y divide-slate-100">
+        {% for c in counts %}
+        <tr>
+          <td class="px-4 py-3 font-mono text-xs font-semibold">{{ c.count_number }}</td>
+          <td class="px-4 py-3">{{ c.count_date }}</td>
+          <td class="px-4 py-3">{{ c.location.code }}</td>
+          <td class="px-4 py-3 text-xs">{% for it in c.items.all %}{{ it.variant.sku }}: {{ it.system_quantity }} &rarr; {{ it.counted_quantity }} ({% if it.variance_quantity > 0 %}+{% endif %}{{ it.variance_quantity }}){% if not forloop.last %}; {% endif %}{% endfor %}</td>
+          <td class="px-4 py-3">{{ c.created_by.username }}</td>
+        </tr>
+        {% empty %}
+        <tr><td colspan="5" class="px-4 py-8 text-center text-slate-500">{% trans "No physical counts recorded yet." %}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<script src="{% static 'js/line_items.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Staff & Roles" %} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-6">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{% trans "Staff & Roles" %}</h1>
+    <p class="text-sm text-slate-500">{% trans "Manage shop staff accounts and access permissions" %}</p>
+  </div>
+  <a href="{% url 'accounts:user_create' %}" class="inline-flex items-center justify-center px-4 py-2.5 bg-sky-600 hover:bg-sky-700 text-white text-sm font-semibold rounded-lg">
+    {% trans "+ Add Staff User" %}
+  </a>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "Username" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Name" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Role" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Phone" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Status" %}</th>
+        <th class="px-4 py-3 font-semibold text-right">{% trans "Action" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for u in users %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 font-medium text-slate-900">{{ u.username }}</td>
+        <td class="px-4 py-3">{{ u.get_full_name|default:"—" }}</td>
+        <td class="px-4 py-3">
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-sky-50 text-sky-700">{{ u.get_role_display }}</span>
+        </td>
+        <td class="px-4 py-3">{{ u.phone|default:"—" }}</td>
+        <td class="px-4 py-3">
+          {% if u.is_active %}
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700">{% trans "Active" %}</span>
+          {% else %}
+          <span class="px-2 py-0.5 rounded-full text-xs font-semibold bg-slate-100 text-slate-600">{% trans "Inactive" %}</span>
+          {% endif %}
+        </td>
+        <td class="px-4 py-3 text-right">
+          <a href="{% url 'accounts:user_edit' u.pk %}" class="text-sky-600 hover:underline font-medium">{% trans "Edit" %}</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

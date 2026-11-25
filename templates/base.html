@@ -1,0 +1,275 @@
+{% load static i18n %}
+{% get_current_language as LANGUAGE_CODE %}
+{% get_current_language_bidi as LANGUAGE_BIDI %}
+<!DOCTYPE html>
+<html lang="{{ LANGUAGE_CODE|default:'en' }}" dir="{% if LANGUAGE_BIDI %}rtl{% else %}ltr{% endif %}">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}{{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='6' fill='%230f172a'/><text x='50%25' y='55%25' dominant-baseline='middle' text-anchor='middle' fill='%23ffffff' font-family='sans-serif' font-size='18' font-weight='bold'>M</text></svg>" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/htmx.org@2.0.4"></script>
+  <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col md:flex-row">
+  {% if user.is_authenticated %}
+  <!-- Mobile Top Bar -->
+  <header class="md:hidden bg-slate-900 text-white px-4 py-3 flex items-center justify-between gap-2 sticky top-0 z-30 shadow no-print">
+    <a href="{% url 'dashboard:home' %}" class="font-bold tracking-wide text-lg truncate">
+      {{ store_settings.store_name|default:"MARINA SHOES" }}
+    </a>
+    <div class="flex items-center gap-1.5 shrink-0">
+      {% include "partials/language_switcher.html" with variant="dark" %}
+      {% if user.is_owner or user.is_manager or user.is_billing_staff %}
+      <a href="{% url 'sales:pos' %}" class="px-2.5 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-semibold">
+        {% trans "POS" %}
+      </a>
+      {% endif %}
+      <button
+        type="button"
+        onclick="document.getElementById('mobile-nav').classList.toggle('hidden')"
+        class="px-2.5 py-1.5 rounded-lg bg-slate-800 text-xs font-medium"
+        aria-label="Toggle Menu"
+      >
+        {% trans "Menu" %}
+      </button>
+    </div>
+  </header>
+
+  <!-- Sidebar (Desktop + Mobile Drawer) -->
+  <aside id="mobile-nav" class="hidden md:flex md:flex-col w-full md:w-64 bg-slate-900 text-slate-100 shrink-0 md:min-h-screen no-print">
+    <div class="hidden md:block px-5 py-4 border-b border-slate-800">
+      <a href="{% url 'dashboard:home' %}" class="block">
+        <div class="text-lg font-bold tracking-wide text-white">{{ store_settings.store_name|default:"MARINA SHOES" }}</div>
+        <div class="text-xs text-slate-400 mt-0.5">{{ store_settings.tagline|default:"Wholesale & Retail Footwear" }}</div>
+      </a>
+    </div>
+
+    <!-- Menu Language Switcher -->
+    <div class="px-4 py-2.5 border-b border-slate-800 flex items-center justify-between gap-2">
+      <span class="text-xs font-semibold text-slate-400">{% trans "Language" %}</span>
+      {% include "partials/language_switcher.html" with variant="dark" %}
+    </div>
+
+    <nav class="flex-1 px-3 py-4 space-y-1.5 text-sm overflow-y-auto">
+      {% with app=request.resolver_match.app_name|default:'' url=request.resolver_match.url_name|default:'' %}
+      <a href="{% url 'dashboard:home' %}" class="flex items-center gap-2.5 px-3 py-2.5 rounded-lg hover:bg-slate-800 {% if app == 'dashboard' %}bg-sky-700 text-white font-semibold{% else %}text-slate-200{% endif %}">
+        <span class="w-4 text-center text-xs opacity-80">■</span>
+        <span>{% trans "Dashboard" %}</span>
+      </a>
+
+      {% if user.is_owner or user.is_manager or user.is_billing_staff %}
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'sales' or app == 'customers' or app == 'invoicing' or app == 'payments' or user.is_billing_staff and app == 'dashboard' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Sales" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'sales:pos' %}" class="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-slate-800 {% if url == 'pos' %}bg-emerald-600 text-white font-semibold{% else %}text-emerald-300{% endif %}">
+            <span>{% trans "POS Billing" %}</span>
+          </a>
+          <a href="{% url 'invoicing:invoice_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'invoicing' and 'invoice_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Sales & Invoices" %}</span>
+          </a>
+          <a href="{% url 'sales:order_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'sales' and 'order_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Sales Orders" %}</span>
+          </a>
+          <a href="{% url 'customers:customer_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'customers' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Customers" %}</span>
+          </a>
+          <a href="{% url 'payments:payment_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'payments' and url == 'payment_list' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Receive Payments" %}</span>
+          </a>
+          <a href="{% url 'payments:credit_ledger' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'credit_ledger' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Receivables & Ledger" %}</span>
+          </a>
+          <a href="{% url 'payments:overdue_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'overdue_list' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Overdue Accounts" %}</span>
+          </a>
+          {% if user.is_owner or user.is_manager %}
+          <a href="{% url 'payments:aging' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'aging' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Aging Reports" %}</span>
+          </a>
+          {% endif %}
+          <a href="{% url 'sales:return_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'sales' and 'return_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Sales Returns" %}</span>
+          </a>
+          <a href="{% url 'invoicing:credit_note_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if 'credit_note' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Credit Notes" %}</span>
+          </a>
+        </div>
+      </details>
+      {% endif %}
+
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'inventory' or user.is_storekeeper and app == 'dashboard' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Inventory" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'inventory:product_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'inventory' and 'product' in url or app == 'inventory' and 'variant' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Products & Variants" %}</span>
+          </a>
+          {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+          <a href="{% url 'inventory:stock_movement' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'stock_movement' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Stock Adjustments" %}</span>
+          </a>
+          <a href="{% url 'inventory:stock_transfers' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'stock_transfers' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Stock Transfers" %}</span>
+          </a>
+          <a href="{% url 'inventory:stock_counts' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'stock_counts' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Stock Counts" %}</span>
+          </a>
+          <a href="{% url 'inventory:categories_brands' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'categories_brands' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Categories & Brands" %}</span>
+          </a>
+          <a href="{% url 'inventory:import_export' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'import_export' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Import / Export" %}</span>
+          </a>
+          {% endif %}
+          <a href="{% url 'inventory:low_stock' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'low_stock' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Low-Stock Alerts" %}</span>
+          </a>
+        </div>
+      </details>
+
+      {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'purchases' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Purchases" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'purchases:supplier_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'purchases' and url != 'supplier_payments' and 'supplier_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Suppliers" %}</span>
+          </a>
+          <a href="{% url 'purchases:po_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'purchases' and 'po_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Purchase Orders" %}</span>
+          </a>
+          <a href="{% url 'purchases:grn_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'purchases' and 'grn_' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Goods Received" %}</span>
+          </a>
+          {% if user.is_owner or user.is_manager %}
+          <a href="{% url 'purchases:supplier_payments' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'supplier_payments' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Supplier Payments" %}</span>
+          </a>
+          {% endif %}
+        </div>
+      </details>
+      {% endif %}
+
+      {% if user.is_owner or user.is_manager %}
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'expenses' or app == 'finance' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Finance" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'expenses:expense_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'expenses' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Expenses" %}</span>
+          </a>
+          <a href="{% url 'finance:cash_book' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'cash_book' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Cash Book" %}</span>
+          </a>
+          <a href="{% url 'finance:bank_book' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if url == 'bank_book' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Bank Book" %}</span>
+          </a>
+          <a href="{% url 'finance:overview' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'finance' and url == 'overview' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Profit & Loss" %}</span>
+          </a>
+        </div>
+      </details>
+      {% endif %}
+
+      {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'reports' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Reports" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'reports:index' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'reports' and url == 'index' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "All Reports & Exports" %}</span>
+          </a>
+          <a href="{% url 'reports:index' %}#sales-reports" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300">
+            <span>{% trans "Sales Reports" %}</span>
+          </a>
+          <a href="{% url 'reports:index' %}#inventory-reports" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300">
+            <span>{% trans "Inventory Reports" %}</span>
+          </a>
+          <a href="{% url 'reports:index' %}#purchase-reports" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300">
+            <span>{% trans "Purchase Reports" %}</span>
+          </a>
+          {% if user.is_owner or user.is_manager %}
+          <a href="{% url 'reports:index' %}#financial-reports" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 text-slate-300">
+            <span>{% trans "Financial Reports" %}</span>
+          </a>
+          {% endif %}
+        </div>
+      </details>
+      {% endif %}
+
+      {% block nav_items %}{% endblock %}
+
+      {% if user.is_owner %}
+      <details class="group pt-1 border-t border-slate-800/80" {% if app == 'accounts' or app == 'core' or app == 'audit' %}open{% endif %}>
+        <summary class="flex items-center justify-between px-3 py-2 rounded-lg cursor-pointer select-none text-xs font-semibold uppercase tracking-wider text-slate-400 hover:text-white hover:bg-slate-800/70 list-none">
+          <span>{% trans "Administration" %}</span>
+          <span class="nav-chevron transition-transform group-open:rotate-90 text-[10px]">▶</span>
+        </summary>
+        <div class="mt-1 space-y-0.5 pl-2">
+          <a href="{% url 'accounts:user_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'accounts' and 'user' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Staff & Roles" %}</span>
+          </a>
+          <a href="{% url 'core:locations' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'core' and 'location' in url %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Stores & Warehouses" %}</span>
+          </a>
+          <a href="{% url 'core:store_settings' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'core' and url == 'store_settings' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Store Settings" %}</span>
+          </a>
+          <a href="{% url 'audit:audit_list' %}" class="flex items-center gap-2 px-3 py-1.5 rounded-lg hover:bg-slate-800 {% if app == 'audit' %}bg-sky-700 text-white font-semibold{% endif %}">
+            <span>{% trans "Audit Log" %}</span>
+          </a>
+        </div>
+      </details>
+      {% endif %}
+      {% endwith %}
+    </nav>
+
+    <div class="p-4 border-t border-slate-800 text-sm">
+      <div class="flex items-center justify-between mb-2">
+        <div>
+          <div class="font-medium text-white">{{ user.get_full_name|default:user.username }}</div>
+          <span class="inline-block mt-0.5 px-2 py-0.5 text-xs rounded bg-slate-800 text-sky-300">{{ user.get_role_display }}</span>
+        </div>
+        <a href="{% url 'accounts:profile' %}" class="text-xs text-slate-300 hover:text-white underline">{% trans "Profile" %}</a>
+      </div>
+      <form method="post" action="{% url 'accounts:logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="w-full py-2 rounded-lg bg-slate-800 hover:bg-rose-700 text-slate-200 text-xs font-semibold transition">
+          {% trans "Sign Out" %}
+        </button>
+      </form>
+    </div>
+  </aside>
+  {% endif %}
+
+  <!-- Main Content -->
+  <main class="flex-1 min-w-0 p-4 sm:p-6 lg:p-8">
+    {% if messages %}
+    <div class="space-y-2 mb-4 no-print">
+      {% for message in messages %}
+      <div role="alert" class="flex items-center justify-between gap-3 px-4 py-3 rounded-lg border text-sm font-medium {% if message.tags == 'error' %}bg-rose-50 border-rose-200 text-rose-800{% elif message.tags == 'warning' %}bg-amber-50 border-amber-200 text-amber-800{% else %}bg-emerald-50 border-emerald-200 text-emerald-800{% endif %}">
+        <span>{{ message }}</span>
+        <button type="button" onclick="this.closest('[role=alert]').remove()" class="text-xs opacity-60 hover:opacity-100 font-bold px-1.5 py-0.5 rounded" aria-label="Dismiss">&times;</button>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

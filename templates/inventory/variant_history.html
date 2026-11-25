@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Stock History:" %} {{ variant.sku }} — {{ store_settings.store_name|default:"MARINA SHOES" }}{% endblock %}
+{% block content %}
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-5">
+  <div>
+    <h1 class="text-2xl font-bold text-slate-900">{{ variant.product.name }} — {{ variant.color }} ({{ variant.size }})</h1>
+    <p class="text-sm text-slate-500">SKU: <span class="font-mono font-semibold">{{ variant.sku }}</span> &middot; {% trans "Current Stock:" %} <span class="font-bold text-slate-900">{{ variant.current_stock }}</span></p>
+  </div>
+  <div class="flex gap-2">
+    <a href="{% url 'inventory:product_detail' variant.product_id %}" class="px-3.5 py-2 rounded-lg bg-slate-100 text-slate-700 text-sm font-semibold">{% trans "Back to Product" %}</a>
+    {% if user.is_owner or user.is_manager or user.is_storekeeper %}
+    <a href="{% url 'inventory:stock_movement' %}?variant={{ variant.pk }}" class="px-3.5 py-2 rounded-lg bg-sky-600 text-white text-sm font-semibold">{% trans "Record Movement" %}</a>
+    {% endif %}
+  </div>
+</div>
+
+<div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-x-auto">
+  <table class="w-full text-left text-sm">
+    <thead class="bg-slate-50 border-b border-slate-200 text-slate-600">
+      <tr>
+        <th class="px-4 py-3 font-semibold">{% trans "Timestamp" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Type" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Change" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Reference" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "User" %}</th>
+        <th class="px-4 py-3 font-semibold">{% trans "Notes" %}</th>
+      </tr>
+    </thead>
+    <tbody class="divide-y divide-slate-100">
+      {% for m in movements %}
+      <tr class="hover:bg-slate-50">
+        <td class="px-4 py-3 whitespace-nowrap text-slate-600">{{ m.created_at|date:"Y-m-d H:i" }}</td>
+        <td class="px-4 py-3 font-medium">{{ m.get_movement_type_display }}</td>
+        <td class="px-4 py-3 font-bold {% if m.signed_quantity >= 0 %}text-emerald-700{% else %}text-rose-700{% endif %}">
+          {% if m.signed_quantity > 0 %}+{% endif %}{{ m.signed_quantity }}
+        </td>
+        <td class="px-4 py-3 font-mono text-xs">{{ m.reference|default:"—" }}</td>
+        <td class="px-4 py-3">{{ m.user.username }}</td>
+        <td class="px-4 py-3 text-slate-600">{{ m.notes|default:"—" }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="px-4 py-8 text-center text-slate-500">{% trans "No stock movements recorded yet." %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
